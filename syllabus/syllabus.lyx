@@ -1085,7 +1085,7 @@ If you want to get a sense of what material we will cover in more detail,
 \begin_layout Standard
 
 \family typewriter
-git clone https://github.com/paciorek/stat243-fall-2015
+git clone https://github.com/berkeley-stat243/stat243-fall-2015
 \end_layout
 
 \begin_layout Section*

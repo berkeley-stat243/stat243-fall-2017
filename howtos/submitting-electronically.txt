@@ -43,8 +43,7 @@ email = "jcool@berkeley.edu"
 github_name = "joecool"
 -------------------------
 
-The variable names have to be exactly as specified above. Then add, commit, and
-push.
+The variable names (name, SID, email, github_name) have to be exactly as specified above. Then add, commit, and push.
 
 If you need additional details, here are more detailed directions that Jarrod
 Millman provided to undergraduates for a different class:

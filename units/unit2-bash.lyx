@@ -200,29 +200,34 @@ Using the bash shell
 \begin_layout Standard
 Please see the tutorial on using the bash shell.
  For our purposes in this Unit, you should work through all of the material
- EXCEPT the following sections:
+ EXCEPT as follows:
 \end_layout
 
 \begin_layout Itemize
-Command history and editing (Section 1.3.2)
+You can skip Section 1.4.1.
 \end_layout
 
 \begin_layout Itemize
-Regular expressions (Section 3), but do look at Sections 3.6.1 and 3.6.2
+You can skip regular expressions (Section 3), but do look at Sections 3.6.1
+ and 3.6.2
 \end_layout
 
 \begin_layout Itemize
-screen (Section 4.3.4)
+You can skip 
+\emph on
+screen
+\emph default
+ (Section 4.3.4)
+\end_layout
+
+\begin_layout Itemize
+Feel free to skim over Section 4 for now; I'll ask you to read it more carefully
+ later.
 \end_layout
 
 \begin_layout Standard
 When we talk about string processing and regular expressions in R in Unit
  4, we'll come back to the material on regular expressions.
-\end_layout
-
-\begin_layout Standard
-Feel free to skim over Section 4 for now; I'll ask you to read it more carefully
- later.
 \end_layout
 
 \begin_layout Standard

@@ -1,0 +1,42 @@
+Unless otherwise noted, all assignments should be completed by the
+time of class, 2 pm. For problem sets, submission
+is due at the start of class as a paper submission and via Github.
+Instructions for other assignments will vary.
+
+Unless otherwise noted, tutorials are found at
+statistics.berkeley.edu/computing/training/tutorials.
+
+Friday, Aug. 25 by 2 pm:
+
+1) fill out the class survey: https://goo.gl/forms/3hcV95EgXw2uvZAv2
+This is required and due by Friday (and will be counted as one of the questions on the first problem set).
+
+2) get access to a bash shell and work through the UNIX basics tutorial. If you'd like to use the shell, git, and R on your own machine,
+try to set that up too.
+
+If you have problems with software installation, UNIX access, or would like to discuss material from the UNIX basics tutorial, please attend the optional
+Friday session on UNIX and installation.
+Session will be 3 pm - 5 pm in Evans 342.
+
+Monday, Aug. 28 by 2 pm:
+
+Work through the tutorial on using bash and hand in 
+(at the beginning of class) a paper solution to questions 1-10 posed 
+at the end of the tutorial. See comments in unit2-bash.pdf on what sections you can skip or skim over.
+
+This is not a formal problem set, so your answers can be in any format
+and can simply be the code you would use to solve the problem without any textual explanation. Hand-written is fine too. 
+
+Week of Aug. 28:
+
+If you are not familiar with R at the level of
+modules 1-6 of the R bootcamp
+(https://github.com/berkeley-scf/r-bootcamp-2017/archive/master.zip), work through those
+modules and the breakout problems associated with the modules and
+(optionally) attend the special catch-up session on R to be held
+during the week. Some other resources for R are listed at the end of module 11
+of the bootcamp materials, so you could also use those resources. 
+
+Week of Sep. 4 (date TBD):
+
+first problem set (PS1) due.

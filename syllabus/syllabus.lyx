@@ -100,10 +100,6 @@ STAT 243: Introduction to Statistical Computing
 \end_inset
 
 Fall 2017 (Paciorek)
-\begin_inset Newline newline
-\end_inset
-
-DRAFT
 \end_layout
 
 \begin_layout Subsection*
@@ -116,8 +112,8 @@ Statistics 243 is an introduction to statistical computing taught using
  The course will cover both programming concepts and statistical computing
  concepts.
  Programming concepts will include data and text manipulation, data structures,
- functions and variable scope, regular expressions, debugging, parallel
- and processing.
+ functions and variable scope, regular expressions, debugging, and parallel
+ processing.
  Statistical computing topics will include working with large datasets,
  numerical linear algebra, computer arithmetic/precision, simulation studies
  and Monte Carlo methods, numerical optimization, and numerical integration/diff
@@ -150,8 +146,16 @@ Informal prerequisites: If you are not a statistics or biostatistics graduate
  about environments and scoping].
  If you don't have that background you'll need to spend time in the initial
  couple weeks getting up to speed.
- All the material from the bootcamp will be available, we'll have a hands-on
- practice session, and the GSI can also provide assistance.
+ All the material from the bootcamp is 
+\begin_inset CommandInset href
+LatexCommand href
+name "available here"
+target "https://github.com/berkeley-scf/r-bootcamp-2017/archive/master.zip"
+
+\end_inset
+
+, we'll have a hands-on practice session, and the GSI can also provide assistanc
+e.
 \end_layout
 
 \begin_layout Subsection*
@@ -169,7 +173,7 @@ operate effectively in a UNIX environment and on remote servers;
 
 \begin_layout Itemize
 program effectively in R with an advanced knowledge of R functionality and
- an understanding of general programming concepts; and
+ an understanding of general programming concepts;
 \end_layout
 
 \begin_layout Itemize
@@ -272,7 +276,7 @@ target "https://piazza.com/class/j6merxkgjmb4pb"
 SCF tutorials for additional content: 
 \begin_inset CommandInset href
 LatexCommand href
-target "http://statistics.berkeley.edu/training/tutorials"
+target "http://statistics.berkeley.edu/computing/training/tutorials"
 
 \end_inset
 
@@ -314,7 +318,7 @@ We will use Piazza for communication (announcements and questions).
  Questions of a personal nature can marked Private on Piazza.
  If you have a specific question you need to direct just to me, it's fine
  to email me directly.
- In general, I ask that you not post questions anonymously and I will note
+ In general, I ask that you not post questions anonymously, and I will note
  that the instructors do know who is posting.
  
 \end_layout
@@ -364,6 +368,18 @@ Course material
 
 \begin_layout Standard
 Primary textbooks:
+\end_layout
+
+\begin_layout Itemize
+For bash: Newham, Cameron and Rosenblatt, Bill.
+ Learning the bash Shell (available electronically through OskiCat: 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://uclibs.org/PID/77225"
+
+\end_inset
+
+)
 \end_layout
 
 \begin_layout Itemize
@@ -434,11 +450,24 @@ Xie, Yihui; Dynamic documents with R and knitr.
 \end_layout
 
 \begin_layout Itemize
+Nolan, Deborah and Temple Lang, Duncan.
+ XML and Web Technologies for Data Sciences with R.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://link.springer.com/book/10.1007%2F978-1-4614-7900-0"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
 The R-intro and R-lang documentation.
  
 \begin_inset CommandInset href
 LatexCommand href
-target "www.cran.r-project.org/manuals.html"
+target "https://www.cran.r-project.org/manuals.html"
 
 \end_inset
 
@@ -494,7 +523,7 @@ status open
  
 \begin_inset CommandInset href
 LatexCommand href
-target "http://sunsite.berkeley.edu:8080/librarysurvey/library.survey.logic?refUrl=http%3A%2F%2Fsite%2Eebrary%2Ecom%2Flib%2Fberkeley%2FDoc%3Fid%3D2004310"
+target "https://link.springer.com/book/10.1007%2Fb98850"
 
 \end_inset
 
@@ -522,22 +551,6 @@ status open
 \begin_inset CommandInset href
 LatexCommand href
 target "http://dx.doi.org/10.1017/CBO9780511977176"
-
-\end_inset
-
-)
-\end_layout
-
-\begin_layout Standard
-And for bash:
-\end_layout
-
-\begin_layout Itemize
-Newham, Cameron and Rosenblatt, Bill.
- Learning the bash Shell (available electronically through OskiCat: 
-\begin_inset CommandInset href
-LatexCommand href
-target "http://uclibs.org/PID/77225"
 
 \end_inset
 
@@ -995,7 +1008,18 @@ Your report need not be in any standardized format, but all of the above
 
 \end_inset
 
- Topics (in order with rough timing)
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Topics (in order with rough timing)
 \end_layout
 
 \begin_layout Enumerate

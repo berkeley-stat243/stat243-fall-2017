@@ -49,7 +49,8 @@ The variable names (name, SID, email, github_name) have to be exactly as specifi
 i.e. Only change the items in the quotation marks.  
 An example `info.json` file can be found in this directory.
 Your status should be one of `"enrolled"`, `"waitlist"`, or `"audit"`.
-When you're finished, add, commit, and push.
+When you're finished, add, commit, push, and then fill out this google form:
+https://goo.gl/forms/JMABop6RelSXjtGv1
 
 If you need additional details, here are more detailed directions that Jarrod
 Millman provided to undergraduates for a different class.

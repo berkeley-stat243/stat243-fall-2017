@@ -1,4 +1,4 @@
-You have several options here:
+You have several options for UNIX command-line access. You'll need to choose one of these and get it working.
 
 Mac OS:
 
@@ -6,13 +6,17 @@ Open a Terminal by going to Applications -> Utilities -> Terminal
 
 Windows:
 
+1.  You may be able to use the Ubuntu bash shell available in Windows.
+
 Your PC must be running a 64-bit version of Windows 10 Anniversary Update or later (build 1607+).
 
 Please see this link for more information:
 
 https://msdn.microsoft.com/en-us/commandline/wsl/install_guide
 
-You could also try using the BCE virtual machine, which is a virtual Linux machine that you can use on your own computer through a program called VirtualBox. You're welcome to try this, though we haven't updated the BCE virtual machine in a while. Please see bce.berkeley.edu.
+2. You could also try using the BCE virtual machine, which is a virtual Linux machine that you can use on your own computer through a program called VirtualBox. You're welcome to try this, though we haven't updated the BCE virtual machine in a while. Please see bce.berkeley.edu.
+
+3. There's an older program called cygwin that provides a UNIX command-line interface. 
 
 Linux:
 

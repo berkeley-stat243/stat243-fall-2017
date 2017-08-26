@@ -12,8 +12,13 @@ repo](https://github.com/berkeley-scf/tutorial-git-basics).
 git clone https://github.com/berkeley-scf/tutorial-git-basics
 ```
 
-We will not cover the entire tutorial, only the basics. We'll come back to it in a later section,
-but I recommend you read through the entire tutorial over the next week or two.
+We will not cover the entire tutorial, only the basics. We'll come back to it in a later section, but I recommend you read through the entire tutorial over the next week or two.
+
+I generally use:
+
+`git commit -am'add specific message here'`
+
+when I make a commit. The -a flag causes all files that have changed and are already in the repository to have their changes committed.
 
 There are two ways to start a repository and link the local copy on your machine to a remote copy on Github:
 

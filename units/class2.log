@@ -1,0 +1,50 @@
+508  git clone https://github.com/berkeley-stat243/stat243-fall-2017
+  509  ls stat243-fall-2017/
+  510  cd stat243-fall-2017/
+  511  less README.md 
+  512  git pull
+  513  less README.md 
+  514  git log
+  515  git checkout 23f2ed1d7
+  516  less README.md 
+  517  cd
+  518  cd Desktop/
+  519  git clone https://github.com/berkeley-stat243/stat243-fall-2015
+  520  cd stat243-fall-2015/data
+  521  ls
+  522  ls -l
+  523  gunzip coop.txt.gz 
+  524  ls -l
+  525  less coop.txt 
+  526  man cut
+  527  man cut
+  528  man cut
+  529  cut -b50-70 coop.txt 
+  530  cut -b50-70 coop.txt | less
+  531  cut -b60-61 coop.txt | less
+  532  cut -b60-61 coop.txt | sort
+  533  cut -b60-61 coop.txt | sort | uniq
+  534  cut -b60-61 coop.txt | sort | uniq | nl
+  535  cut -b60-61 coop.txt | sort | uniq -c 
+  536  less cpds.csv 
+  537  tail -n 1 cpds.csv
+  538  less cpds.csv 
+  539  tail -n 1 cpds.csv | grep ","
+  540  tail -n 1 cpds.csv | grep -o ',' 
+  541  tail -n 1 cpds.csv | grep -o ',' | wc
+  542  tail -n 1 cpds.csv | grep -o ',' | wc -l 
+  543  nfields=$(tail -n 1 cpds.csv | grep -o ',' | wc -l)
+  544  echo ${nfield}foo
+  545  echo ${nfields}
+  546  echo ${nfields}foo
+  547  echo $nfieldsfoo
+  548  echo $nfields
+  549  env
+  550  less cpds.csv 
+  551  nfields=$(echo "${nfields}+1" | bc)
+  552  echo $nfields
+  553  tail -n 1 cpds.csv | grep -o ',' >> /tmp/foo
+  554  cat /tmp/foo
+  555  echo "," >> /tmp/foo
+  556  cat /tmp/foo
+ 

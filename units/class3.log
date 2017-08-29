@@ -1,0 +1,73 @@
+ls -tr *.R
+ls -ltr *.R
+ls -tr *.R | tail -n 5
+ls -tr *.R | tail -n 5 | grep pdf
+ls -tr *.R | tail -n 5 | grep optim
+grep 'example.pdf' $(ls -tr *.R | tail -n 5)
+grep 'example.pdf' $(ls -tr *.R )
+grep 'example.pdf' $(ls -tr *.R )
+ls -tr *.R | tail -n 5 | xargs grep -l 'example.pdf'
+ls -tr *.R | xargs grep -l 'example.pdf'
+ls -tr *.R | xargs grep  'example.pdf'
+man grep
+which xargs
+ls -tr *.R 
+ls -tr *.R | xargs grep  'example\.pdf'
+ls -tr *.R | xargs grep -f 'example.pdf'
+ls -tr *.R | xargs grep -F 'example.pdf'
+ls  unit[1-9]*.R
+ls  unit[1-9]-*.R
+grep library *.R
+grep --no-filename library *.R
+grep --no-filename "^library" *.R
+grep --no-filename "^library" *.R | sort | uniq
+grep --no-filename "^library" *.R | sort | uniq | cut -d'#' -f1
+grep --no-filename "^library" *.R | sort | uniq | cut -d'#' -f1 |     tee libs.txt
+ls -lrt
+less libs.txt 
+grep -v "help =" libs.txt > tmp2.txt
+less tmp2.txt 
+sed 's/;/\n/g' tmp2.txt | sed 's/ //g' |     sed 's/library(//' | sed 's/)//g' > libs.txt
+less libs.txt 
+less tmp2.txt 
+sed 's/;/\n/g' tmp2.txt
+sed 's/;/\\n/g' tmp2.txt
+sed 's/;/\\n/g' tmp2.txt | sed 's/ //g' |     sed 's/library(//' | sed 's/)//g' > libs.txt
+less libs.txt 
+sed 's/;/\\\n/g' tmp2.txt | sed 's/ //g' |     sed 's/library(//' | sed 's/)//g' > libs.txt
+less libs.txt 
+echo "There are $(wc -l libs.txt | cut -d' ' -f1) \
+unique packages we will install."
+less libs.txt 
+wc -l libs.txt 
+wc -l libs.txt | cut -d' ' -f1
+wc -l libs.txt | cut -d' ' -f4
+wc -l libs.txt | cut -d' ' -f5
+wc -l libs.txt | cut -d' ' -f6
+echo "There are $(wc -l libs.txt | cut -d' ' -f7) \
+unique packages we will install."
+less tmp2.txt 
+man tr
+top
+echo "Sys.sleep(1e5)" > job.R
+nJobs=30
+for (( i=1; i<=${nJobs}; i++ )); do    R CMD BATCH --no-save job.R job-${i}.out & done
+ps -o pid,pcpu,pmem,user,cmd -C R
+ps -o pid,pcpu,pmem,user,cmd -C R
+ps -o pid,pcpu,pmem,user,cmd,start_time --sort=start_time -C R | tail -n 30
+ps -o pid --sort=start_time -C R | tail -n ${nJobs} | xargs kill
+top
+ps
+ps -o pid,pcpu,pmem,user,cmd -C R
+ps -o pid,pcpu,pmem,user,cmd 
+
+grep bash unit2-bash.sh
+grep bash unit2-bash.sh 
+man grep
+emacs -nw tmp.txt
+grep -o the tmp.txt
+grep -o the tmp.txt | wc -l
+grep -c the tmp.txt
+grep -c -o  the tmp.txt
+echo "adfsadfds $(grep bash unit2-bash.sh | wc -l)"
+

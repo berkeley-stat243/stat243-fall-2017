@@ -61,4 +61,20 @@ as you will need to modify the instructions to apply to this class. For
 instance, use `stat243` not `stat133`, make sure to add Chris and Andrew as
 collaborators (and not Karl or Inga), and verify that the info file is in json format as above.
 
+Repository Organization
+The problem sets in your repository should be organized into folders with specific filenames.  
+When we pull from your repository, our code will be assuming the following structure:
+
+your_repo/
+├── ps1/
+│   ├── ps1.pdf
+│   ├── ps1.rnw (.rmd, .lyx, .tex)
+├── ps2/
+│   ├── ...
+├── ...
+├── ps8/
+└── info.json
+
+
+
 

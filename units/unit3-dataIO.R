@@ -192,3 +192,172 @@ names(data)
 class(data$loans) # nice!
 head(data$loans)
 
+## @knitr
+
+### 3.4 Using web APIs to get data
+
+### 3.4.1 HTTP requests
+
+## @knitr http-get
+URL <- "https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population"
+library(RCurl)
+html <- getURLContent(URL)
+tbls <- readHTMLTable(html)
+
+## @knitr http-byURL
+
+## example URL:
+##"http://data.un.org/Handlers/DownloadHandler.ashx?DataFilter=
+##itemCode:526;year:2003,2004,2005,2006,2007&DataMartId=FAO&
+##Format=csv&c=2,3,4,5,6,7&s=countryName:asc"
+itemCode <- 526
+baseURL <- "http://data.un.org/Handlers/DownloadHandler.ashx"
+yrs <- paste(as.character(2003:2007), collapse = ",")
+filter <- paste0("?DataFilter=itemCode:", itemCode, ";year:", yrs)
+args1 <- "&DataMartId=FAO&Format=csv&c=2,3,4,5,6,7&"
+args2 <- "s=countryName:asc,elementCode:asc,year:desc"
+url <- paste0(baseURL, filter, args1, args2)
+## if the website provided a CSV we could just do this:
+## apricots <- read.csv(url)
+## but it zips the file
+temp <- tempfile()  ## give name for a temporary file
+download.file(url, temp)
+dat <- read.csv(unzip(temp))
+
+head(dat)
+                     
+## @knitr http-get2
+
+output1 <- getForm(baseURL,
+               DataFilter = paste0("itemCode:", itemCode, ";year:", yrs),
+               DataMartID = "FAO", Format = "csv", c = "2,3,4,5,6,7",
+               s = "countryName:asc,elementCode:asc,year:desc")
+class(output1)
+## not sure how to get output1 into a file
+
+library(httr)
+output2 <- GET(baseURL, query = list(
+               DataFilter = paste0("itemCode:", itemCode, ";year:", yrs),
+               DataMartID = "FAO", Format = "csv", c = "2,3,4,5,6,7",
+               s = "countryName:asc,elementCode:asc,year:desc"))
+temp <- tempfile()  ## give name for a temporary file
+writeBin(content(output2, 'raw'), temp)  ## write out as zip file
+dat <- read.csv(unzip(temp))
+head(dat)
+
+
+## @knitr http-post
+URL <- "http://somewhere.com"
+txt <- postForm(URL, "start-year" = "1995", "end-year" = "2005",
+                style = "post")
+result <- readHTMLTable(txt, header = TRUE)
+
+## @knitr
+
+### 3.4.2 REST- and SOAP-based web services
+
+## @knitr REST
+times <- c(2080, 2099)
+countryCode <- 'USA'
+baseURL <- "http://climatedataapi.worldbank.org/climateweb/rest/v1/country"
+type <- "mavg"
+var <- "pr"
+data <- read.csv(paste(baseURL, type, var, times[1], times[2],
+                       paste0(countryCode, '.csv'), sep = '/'))
+head(data)
+
+## @knitr
+
+#####################################################
+# 4: Output from R
+#####################################################
+
+### 4.2 Formatting output
+
+## @knitr print
+val <- 1.5
+cat('My value is ', val, '.\n', sep = '')
+print(paste('My value is ', val, '.', sep = ''))
+
+## @knitr cat
+
+## input
+x <- 7
+n <- 5
+## display powers
+cat("Powers of", x, "\n")
+cat("exponent   result\n\n")
+result <- 1
+for (i in 1:n) {
+	result <- result * x
+	cat(format(i, width = 8), format(result, width = 10),
+            "\n", sep = "")
+}
+x <- 7
+n <- 5
+## display powers
+cat("Powers of", x, "\n")
+cat("exponent result\n\n")
+result <- 1
+for (i in 1:n) {
+	result <- result * x
+	cat(i, '\t', result, '\n', sep = '')
+}
+
+## @knitr sprintf
+temps <- c(12.5, 37.234324, 1342434324.79997234, 2.3456e-6, 1e10)
+sprintf("%9.4f C", temps)
+city <- "Boston"
+sprintf("The temperature in %s was %.4f C.", city, temps[1])
+sprintf("The temperature in %s was %9.4f C.", city, temps[1])
+
+## @knitr
+
+#####################################################
+# 5: File and string encodings
+#####################################################
+
+
+## @knitr locale
+Sys.getlocale()
+
+## @knitr iconv
+text <- "_Melhore sua seguran\xe7a_"
+Encoding(text)
+Encoding(text) <- "latin1"
+text
+
+text <- "_Melhore sua seguran\xe7a_"
+textUTF8 <- iconv(text, from = "latin1", to = "UTF-8")
+Encoding(textUTF8)
+textUTF8
+iconv(text, from = "latin1", to = "ASCII", sub = "???")
+
+## @knitr encoding
+x <- "fa\xE7ile" 
+Encoding(x) <- "latin1" 
+x
+## playing around... 
+x <- "\xa1 \xa2 \xa3 \xf1 \xf2" 
+Encoding(x) <- "latin1" 
+x 
+
+## @knitr encoding-error
+load('../data/IPs.RData') # loads in an object named 'text'
+tmp <- substring(text, 1, 15)
+## the issue occurs with the 6402th element (found by trial and error):
+tmp <- substring(text[1:6401],1,15)
+tmp <- substring(text[1:6402],1,15)
+text[6402] # note the Latin-1 character
+
+table(Encoding(text))
+## Option 1
+Encoding(text) <- "latin1"
+tmp <- substring(text, 1, 15)
+tmp[6402]
+## Option 2
+load('../data/IPs.RData') # loads in an object named 'text'
+tmp <- substring(text, 1, 15)
+text <- iconv(text, from = "latin1", to = "UTF-8")
+tmp <- substring(text, 1, 15)
+

@@ -1,0 +1,34 @@
+  508  grep Belgium .../data/cpds.csv | sort -r -n -t',' -k 6
+  509  ls ../data
+  510  grep Belgium ../data/cpds.csv | sort -r -n -t',' -k 6
+  511  grep Belgium ../data/cpds.csv | sort -r -n -t',' -k 6 | tail -n 1 
+  512  grep Belgium ../data/cpds.csv | sort -r -n -t',' -k 6 | tail -n 1  | cut -d',' -f6
+  513  less ../data/cpds.csv 
+  514  tail -n +2 ../data/cpds.csv | less
+  515  tail -n +2 ../data/cpds.csv | cut -d',' -f2
+  516  tail -n +2 ../data/cpds.csv | cut -d',' -f2 | sort | uniq
+  517  tail -n +2 ../data/cpds.csv | cut -d',' -f2 | sort | uniq | sed 's/\"//g'
+  518  tail -n +2 ../data/cpds.csv | cut -d',' -f2 | sort | uniq | sed 's/\"//g' | sed 's/ /_/g'
+  519  countries=$(tail -n +2 ../data/cpds.csv | cut -d',' -f2 | sort | uniq | sed 's/\"//g' | sed 's/ /_/g')
+  520  echo $countries
+  521  for c in ${countries}; do    echo "${c}: $(grep ${c} ../data/cpds.csv | sort -r -n -t',' -k 6 | tail -n 1  | cut -d',' -f6)"; done
+  522  less ../data/cpds.csv 
+  523  less ../data/cpds.csv 
+  524  for c in ${countries}; do    echo "${c}: $(grep ${c} ../data/cpds.csv | sort -r -n -t',' -k 6 |
+   tail -n 1  | cut -d',' -f6)" > output.txt; done
+  525  less output.txt 
+  526  rm output.txt 
+  527  for c in ${countries}; do    echo "${c}: $(grep ${c} ../data/cpds.csv | sort -r -n -t',' -k 6 |
+   tail -n 1  | cut -d',' -f6)" >> output.txt; done
+  528  less output.txt 
+  529  less ../data/cpds.csv 
+  530  cut -d',' -f4 ../data/RTADataSub.csv | sort | uniq
+  531  cut -d',' -f4 ../data/RTADataSub.csv | sort | uniq | grep "[^0-9]"
+  532  cut -d',' -f4 ../data/RTADataSub.csv | sort | uniq | grep [^0-9]
+  533  cut -d',' -f4 ../data/RTADataSub.csv | sort | uniq | grep "[^0-9 ]"
+  534  for ((i=1; i<=61; i++)); do for ((i=1; i<=61; i++)); do     echo "field ${i}: $(cut -d',' -f${i} ../data/RTADataSub.csv | sort | uniq | grep '[^0-9]')"; done
+  535  for ((i=1; i<=61; i++)); do     echo "field ${i}: $(cut -d',' -f${i} ../data/RTADataSub.csv | sort | uniq | grep '[^0-9]')"; done
+  536  echo ${i}foo
+  537  echo $ifoo
+  538  echo $i foo
+  539  history

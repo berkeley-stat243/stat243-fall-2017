@@ -1,7 +1,7 @@
 ##########################################################
 ### Demo code for Unit 2 of Stat243, 
 ### "The bash shell, UNIX utilities, and version control"
-### Chris Paciorek, August 2015
+### Chris Paciorek, August 2017
 ##########################################################
 
 #####################################################

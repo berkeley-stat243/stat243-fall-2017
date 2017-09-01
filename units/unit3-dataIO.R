@@ -5,6 +5,23 @@
 ##################################################
 
 #####################################################
+# 1: Data storage and formats (outside R)
+#####################################################
+
+## @knitr ascii
+
+## 39 in hex is '9'
+## 0a is a newline (at least in Linux/Mac)
+## 3a is ':'
+x <- as.raw(c('0x39','0x0a','0x3a'))  ## i.e., "9\n:" in ascii
+writeBin(x, 'tmp.txt')
+readLines('tmp.txt')
+system('ls -l tmp.txt', intern = TRUE)
+system('cat tmp.txt', intern = TRUE)
+
+## @knitr
+
+#####################################################
 # 2: Reading data from text files into R
 #####################################################
 

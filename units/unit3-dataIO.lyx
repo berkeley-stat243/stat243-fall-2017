@@ -257,6 +257,44 @@ read.table()
 
 \begin_deeper
 \begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "ASCII"
+target "http://en.wikipedia.org/wiki/ASCII"
+
+\end_inset
+
+ is a text format that has 
+\begin_inset Formula $2^{7}=128$
+\end_inset
+
+ characters and control codes; basically what you see on a standard US keyboard.
+ We can actually hand-generate an ASCII file using the binary representation
+ of each character in R as an illustration.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<ascii>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
 One occasionally tricky difficulty is as follows.
  If you have a text file created in Windows, the line endings are coded
  differently than in UNIX (a newline (the ASCII character

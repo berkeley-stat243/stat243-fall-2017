@@ -202,6 +202,27 @@ target "http://statistics.berkeley.edu/computing/training/tutorials"
 .
 \end_layout
 
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+9/4/17: from 2015 forNextTime:
+\end_layout
+
+\begin_layout Plain Layout
+if webpage is not static, splash can render it so you can scrape it 
+\end_layout
+
+\begin_layout Plain Layout
+selenium/Rselenium can programmatically click through a site 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Data storage and formats (outside R)
 \end_layout

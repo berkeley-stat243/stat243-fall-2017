@@ -1,4 +1,4 @@
-#!/usr/bin/Rscript
+#!/usr/bin/env Rscript
 
 args <- commandArgs(TRUE)
 ## now args is a character vector containing the arguments.

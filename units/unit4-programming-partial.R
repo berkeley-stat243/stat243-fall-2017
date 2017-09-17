@@ -302,8 +302,8 @@ summary(gmod)
 
 
 ## @knitr generic
-mean
-methods(mean)
+summary
+methods(summary)
 
                                            
 ## @knitr new-generic
@@ -703,5 +703,389 @@ z <- 3
 x <- 100
 f <- function(x, y = x*3) {x+y}
 f(z*5)
+
+
+## @knitr
+                                           
+### 6.5 Operators
+                                           
+## @knitr operators, tidy=FALSE
+a <- 7; b <- 3
+# let's think about the following as a mathematical function
+#  -- what's the function call?
+a + b 
+`+`(a, b)
+
+
+## @knitr pass-operator
+x <- 1:3; y <- c(100,200,300)
+outer(x, y, `+`)
+
+myList <- list(list(a = 1:5, b = "sdf"), list(a = 6:10, b = "wer"))
+myMat <- sapply(myList, `[[`, 1)
+## note that the index "1" is the additional argument to the [[ function
+myMat
+cbind(myList[[1]][[1]], myList[[2]][[1]])  ## equivalent but doesn't scale
+
+
+
+## @knitr define-operator
+`%+%` <- function(a, b) paste0(a, b, collapse = '')
+"Hi " %+% "there"
+                                           
+
+
+## @knitr operator-args
+mat <- matrix(1:4, 2, 2)
+mat[ , 1] 
+mat[ , 1, drop = FALSE] # what's the difference?
+
+
+## @knitr
+                                           
+### 6.6 Unexpected functions and replacement functions
+
+## @knitr all-is-fun, eval = FALSE
+if(x > 27){
+	print(x)	
+} else{
+	print("too small") 
+}
+
+
+## @knitr replace-funs, eval = FALSE
+diag(mat) <- c(3, 2)
+is.na(vec) <- 3
+names(df) <- c('var1', 'var2')
+
+
+## @knitr replace-funs2
+mat <- matrix(rnorm(4), 2, 2)
+diag(mat) <- c(3, 2)
+mat <- `diag<-`(mat, c(10, 21))
+base::`diag<-`
+                                           
+
+## @knitr create-replace
+yog <- list(firstName = 'Yogi', lastName = 'Bear')
+`firstName<-` <- function(obj, value){
+  obj$firstName <- value
+  return(obj)
+}
+firstName(yog) <- 'Yogisandra'
+
+                                           
+## @knitr
+                                           
+### 6.7 Variable scope
+
+## @knitr scope-example
+f <- function(y) {
+  return(x + y)
+}
+f(3)
+
+
+## @knitr enclosing, eval=FALSE
+x <- 3
+f <- function() {x <- x^2; print(x)}
+f()
+x # what do you expect?
+f <- function() { assign('x', x^2, env = .GlobalEnv) } 
+## careful: could be dangerous as a variable is changed as a side effect
+f()
+x
+f <- function(x) { x <<- x^2 }
+## careful: could be dangerous as a variable is changed as a side effect
+f(5)
+x
+
+                                           
+## @knitr scope, eval=FALSE
+x <- 3
+f <- function() { 
+    f2 <- function() { print(x) }
+    f2()
+} 
+f() # what will happen?
+
+f <- function() {
+    f2 <- function() { print(x) }
+    x <- 7
+    f2()
+}
+f() # what will happen?
+
+f2 <- function() print(x)
+f <- function() {
+    x <- 7
+    f2()
+}
+f() # what will happen?
+
+                                           
+## @knitr scope-tricky
+y <- 100
+f <- function(){
+	y <- 10
+	g <- function(x) x + y
+	return(g)
+}
+## you can think of f() as a function constructor
+h <- f()
+h(3)
+
+
+## @knitr scope-envts
+environment(h)  # enclosing environment of h()
+ls(environment(h)) # objects in that environment
+f <- function(){
+	print(environment()) # execution environment of f()
+	y <- 10
+	g <- function(x) x + y
+	return(g)
+}
+h <- f()
+environment(h)
+h(3)
+environment(h)$y
+## advanced: explain this:
+environment(h)$g
+
+                                           
+## @knitr scope-problem
+set.seed(1) 
+rnorm(1) 
+save(.Random.seed, file = 'tmp.Rda') 
+rnorm(1)
+tmp <- function() { 
+  load('tmp.Rda') 
+  print(rnorm(1)) 
+}
+tmp()
+                                           
+## @knitr
+                                           
+### 6.8 Environments and the search path
+
+## @knitr search
+search()
+searchpaths()
+
+                                           
+## @knitr nested-env
+x <- environment(lm)
+while (environmentName(x) != environmentName(emptyenv())) {
+	print(environmentName(x))
+	x <- parent.env(x)
+}
+
+
+library(pryr)
+x <- environment(lm)
+parenvs(x, all = TRUE)  
+
+                                           
+## @knitr get
+lm <- function() {return(NULL)} # this seems dangerous but isn't
+x <- 1:3; y <- rnorm(3); mod <- lm(y ~ x)
+mod <- get('lm', pos = 'package:stats')(y ~ x)
+mod <- stats::lm(y ~ x) # an alternative
+## :: is the namespace resolution operator
+rm(lm)
+mod <- lm(y ~ x)
+
+
+## @knitr
+                                           
+### 6.9 Frames and the call stack
+
+## @knitr frames, eval=FALSE
+## NOTE: run this chunk outside RStudio as it seems to inject additional frames
+sys.nframe()
+f <- function() {
+	cat('f: Frame number is ', sys.nframe(),
+            '; parent frame number is ', sys.parent(), '.\n', sep = '')
+	cat('f: Frame (i.e., environment) is: ')
+	print(sys.frame(sys.nframe()))
+	cat('f: Parent is ')
+	print(parent.frame())
+	cat('f: Two frames up is ')
+	print(sys.frame(-2))
+}
+f()
+f2 <- function() {
+	cat('f2: Frame (i.e., environment) is: ')
+	print(sys.frame(sys.nframe()))
+	cat('f2: Parent is ')
+	print(parent.frame())	
+	f()
+}
+f2() 
+
+
+## @knitr frames2, eval=FALSE
+## exploring functions that give us information the frames in the stack
+g <- function(y) {
+	gg <- function() {
+            ## this gives us the information from sys.calls(),
+            ##  sys.parents() and sys.frames() as one object
+		## print(sys.status()) 
+		tmp <- sys.status()
+            print(tmp)
+	}
+	if(y > 0) g(y-1) else gg()
+}
+g(3)
+
+
+
+                                           
+## @knitr
+                                           
+### 6.10 Alternatives to pass by value in R
+## @knitr closures
+x <- rnorm(10)
+f <- function(input){
+	data <- input
+	g <- function(param) return(param * data) 
+	return(g)
+}
+myFun <- f(x)
+rm(x) # to demonstrate we no longer need x
+myFun(3)
+x <- rnorm(1e7)
+myFun <- f(x)
+object.size(myFun) # hmmm
+object.size(environment(myFun)$data)
+
+
+## @knitr closure-boot
+make_container <- function(n) {
+	x <- numeric(n)
+	i <- 1
+	
+	function(value = NULL) {
+		if (is.null(value)) {
+			return(x)
+		} else {
+			x[i] <<- value
+			i <<- i + 1
+		}	 
+	}
+}
+nboot <- 100
+bootmeans <- make_container(nboot)
+data <- faithful[ , 1] # Old Faithful geyser eruption lengths
+for (i in 1:nboot)
+	bootmeans(mean(sample(data, length(data),
+      replace=TRUE)))
+## this will place results in x in the function env't and you can grab it out as
+bootmeans()
+                                           
+
+## @knitr with
+x <- rnorm(10)
+myFun2 <- with(list(data = x), function(param) return(param * data))
+rm(x)
+myFun2(3)
+x <- rnorm(1e7)
+myFun2 <- with(list(data = x), function(param) return(param * data))
+object.size(myFun2)
+
+                                           
+## @knitr
+
+### 6.11 Creating and working in an environment
+                                           
+## @knitr new.env
+e <- new.env()
+assign('x', 3, envir = e) # same as e$x <- 3
+e$x
+get('x', envir = e, inherits = FALSE) 
+## the FALSE avoids looking for x in the enclosing environments
+e$y <- 5
+ls(e)
+rm('x', envir = e)
+parent.env(e)
+
+
+## @knitr envt-container
+myWalk <- new.env(); myWalk$pos = 0
+nextStep <- function(walk) walk$pos <- walk$pos +
+    sample(c(-1, 1), size = 1)
+nextStep(myWalk)
+
+                                           
+## @knitr eval-in-env
+eval(quote(pos <- pos + sample(c(-1, 1), 1)), envir = myWalk)
+evalq(pos <- pos + sample(c(-1, 1), 1), envir = myWalk) 
+
+
+
+## @knitr
+
+#####################################################
+# 7: Efficiency
+#####################################################
+
+### 7.2 Other approaches to speeding up R                  
+
+### 7.2.2 Byte compiling
+
+## @knitr byte
+library(compiler); library(rbenchmark)
+f <- function(x){
+	for(i in 1:length(x)) x[i] <- x[i] + 1
+	return(x)
+}
+fc <- cmpfun(f)
+fc # notice the indication that the function is byte compiled.
+x <- rnorm(100000)
+benchmark(f(x), fc(x), x <- x + 1, replications = 5)
+
+## @knitr
+
+### 7.3 Challenges                  
+                  
+## @knitr mixture-example
+lik <- matrix(as.numeric(NA), nr = n, nc = p)
+for(j in 1:p) lik[ , j] <- dnorm(y, mns[j], sds[j])
+                  
+## @knitr challenge5
+for (i in 1:n) {        
+  for (j in 1:n) {
+    for (z in 1:K) { 
+       if (theta.old[i, z]*theta.old[j, z] == 0){ 
+          q[i, j, z] <- 0 
+       } else { 
+          q[i, j, z] <- theta.old[i, z]*theta.old[j, z] /
+               Theta.old[i, j] 
+       } 
+    } 
+  }
+}
+theta.new <- theta.old 
+for (z in 1:K) { 
+   theta.new[,z] <- rowSums(A*q[,,z])/sqrt(sum(A*q[,,z])) 
+} 
+
+## @knitr challenge8
+
+PIKK <- function(n, k) {
+    ## return indices of the sample of size k
+    sort(runif(n), index.return = TRUE)$ix[1:k]
+}
+
+FYKD <- function(n, k) {
+    indices <- seq_len(n)
+    for(i in 1:n) {
+        j = sample(i:n, 1)
+        tmp <- indices[i]
+        indices[i] <- indices[j]
+        indices[j] <- tmp
+    }
+    return(indices[1:k])
+}
 
 

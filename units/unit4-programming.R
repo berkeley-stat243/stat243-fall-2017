@@ -1070,6 +1070,16 @@ for (z in 1:K) {
    theta.new[,z] <- rowSums(A*q[,,z])/sqrt(sum(A*q[,,z])) 
 } 
 
+## @knitr challenge6
+
+logLik <- function(k, n, p, phi) {
+  klogk <- ifelse(k == 0, 0, k*log(k))
+  nmklognmk <- ifelse(n-k == 0, 0, (n-k)*log(n-k))
+  exp(lchoose(n, k) + klogk + nmklognmk - n*log(n) + phi*(n*log(n) - klogk - nmklognmk) + k*phi*log(p) + (n-k)*phi*log(1-p))
+}
+
+
+
 ## @knitr challenge8
 
 PIKK <- function(n, k) {
@@ -1088,4 +1098,514 @@ FYKD <- function(n, k) {
     return(indices[1:k])
 }
 
+## @knitr challenge9
+
+n <- 100000
+p <- 5  ## number of categories
+
+## way to generate a random matrix of row-normalized probabilities:
+tmp <- exp(matrix(rnorm(n*p), nrow = n, ncol = p))
+probs <- tmp / rowSums(tmp)
+
+smp <- rep(0, n)
+
+## loop by row and use sample()
+set.seed(1)
+system.time(for(i in seq_len(n)) smp[i] <- sample(p, 1, prob = probs[i, ]))
+
+                  
+## @knitr                  
+                                           
+#####################################################
+# 8: Evaluating memory use
+#####################################################
+
+### 8.2 Monitoring overall memory use
+
+                                           
+## @knitr gc
+gc()
+x <- rnorm(1e8) # should use about 800 Mb
+object.size(x)
+object_size(x)  # from pryr
+gc()
+mem_used() # from pryr
+rm(x)
+gc() # note the "max used" column
+mem_change(x <- rnorm(1e8)) # from pryr
+mem_change(x <- rnorm(1e7))
+
+
+## @knitr ls-sizes
+ls.sizes <- function(howMany = 10, minSize = 1){
+	pf <- parent.frame()
+	obj <- ls(pf) # or ls(sys.frame(-1)) 
+	objSizes <- sapply(obj, function(x) {
+                               object.size(get(x, pf))
+                           })
+	## or sys.frame(-4) to get out of FUN, lapply(), sapply() and sizes()
+	objNames <- names(objSizes)
+	howmany <- min(howMany, length(objSizes))
+	ord <- order(objSizes, decreasing = TRUE)
+	objSizes <- objSizes[ord][1:howMany]
+	objSizes <- objSizes[objSizes > minSize]
+	objSizes <- matrix(objSizes, ncol = 1)
+	rownames(objSizes) <- objNames[ord][1:length(objSizes)]
+	colnames(objSizes) <- "bytes"
+	cat('object')
+	print(format(objSizes, justify = "right", width = 11),
+              quote = FALSE)
+}
+
+
+## @knitr serialize
+
+## size of an environment
+e <- new.env()
+e$x <- rnorm(1e7)
+object.size(e)
+length(serialize(e, NULL))
+
+## size of a closure
+x <- rnorm(1e7)
+f <- function(input){
+	data <- input
+	g <- function(param) return(param * data) 
+	return(g)
+}
+myFun <- f(x)
+rm(x)
+object.size(myFun)
+length(serialize(myFun, NULL))
+
+
+## @knitr inspect
+x <- rnorm(5)
+.Internal(inspect(x))
+obj <- list(a = rnorm(5), b = list(d = "adfs"))
+.Internal(inspect(obj$a))
+
+                                           
+## @knitr pryr-address
+obj <- list(a = rnorm(5), b = list(d = "adfs"))
+address(x)  # from pryr
+address(obj$a)
+
+
+## @knitr
+                                           
+### 8.3 Hidden uses of memory
+
+## @knitr hidden1, eval=FALSE
+x <- rnorm(1e7)
+gc()
+dim(x) <- c(1e4, 1e3)
+diag(x) <- 1
+gc()
+
+                                           
+## @knitr hidden2, eval=TRUE
+x <- rnorm(1e7)
+address(x)
+gc()
+x[5] <- 7
+## when run plainly in R, should be the same address as before
+address(x)
+gc()
+
+
+## @knitr hidden3, eval=FALSE
+x <- rnorm(1e7)
+gc()
+y <- x[1:(length(x) - 1)]
+gc()
+
+
+## @knitr
+                                           
+### 8.4 Passing objects to compiled code
+
+## @knitr casts, eval=FALSE
+f <- function(arg1){
+	print(address(arg1))
+	return(mean(arg1))
+}
+x <- rnorm(10)
+class(x)
+debug(f)
+f(x)
+f(as.numeric(x))
+f(as.integer(x))
+
+                                           
+## @knitr pass-to-C
+library(inline) 
+src <- '
+  for (int i = 0; i < *n; i++) {
+    x[i] = exp(x[i]);
+  }
+'
+sillyExp <- cfunction(signature(n = "integer", x = "numeric"),
+	src, convention = ".C")
+## sillyExp <- cfunction(signature(n = "integer", x = "numeric"),
+##    src, convention = ".C")
+len <- as.integer(100)  # or 100L
+vals <- rnorm(len)
+vals[1]
+out1 <- sillyExp(n = len, x = vals)
+address(vals)
+.Internal(inspect(out1))
+.Internal(inspect(out1$x))
+
+
+## @knitr
+                                           
+### 8.5 Delayed copying (copy-on-change)
+
+## @knitr copy-on-change-fun, eval=TRUE
+f <- function(x){
+	print(gc())
+	z <- x[1]
+	.Internal(inspect(x))
+	return(x)
+}
+y <- rnorm(1e7)
+gc()
+.Internal(inspect(y))
+out <- f(y)
+.Internal(inspect(y))
+.Internal(inspect(out))
+
+
+
+## @knitr copy-on-change, eval=TRUE
+y <- rnorm(1e7)
+gc()
+address(y)
+x <- y
+gc()
+object_size(x, y)  # from pryr
+address(x)
+x[1] <- 5
+gc()
+address(x)
+object_size(x, y)
+rm(x)
+x <- y
+address(x)
+address(y)
+y[1] <- 5
+address(x)
+address(y)
+
+
+## @knitr copy-mem-change-question
+library(pryr)
+rm(x)
+mem_change(x <- rnorm(1e7))
+address(x)
+mem_change(x[3] <- 8)
+address(x)
+mem_change(y <- x)
+address(y)
+mem_change(x[3] <- 8)
+address(x)
+address(y)
+
+
+
+## @knitr named
+rm(x, y)
+f <- function(x) sum(x^2)
+y <- rnorm(10)
+refs(y)  # from pryr - reports on the NAMED count
+f(y)
+refs(y)
+address(y)
+y[3] <- 2
+address(y)
+
+a <- 1:5
+b <- a
+address(a)
+address(b)
+a[2] <- 0
+b[2] <- 4
+address(a)
+address(b)
+
+                                           
+## @knitr tracemem
+a <- 1:10     
+tracemem(a)      
+## b and a share memory      
+b <- a      
+b[1] <- 1  
+## result when done through knitr is not as in plain R   
+untracemem(a)   
+address(a)
+address(b)
+
+
+
+
+## @knitr memuse1
+x <- rnorm(1e7) 
+myfun <- function(y){ 
+	z <- y 
+	return(mean(z)) 
+} 
+myfun(x)
+
+
+## @knitr memuse2
+x <- rnorm(1e7)
+x[1] <- NA
+myfun <- function(y){ 
+	return(mean(y, na.rm = TRUE))
+}
+myfun(x)
+
+                                           
+## @knitr
+                                           
+### 8.8 Example
+
+## @knitr memuse-real, eval = FALSE
+fastcount <- function(xvar, yvar) {
+	naline <- is.na(xvar)
+	naline[is.na(yvar)] = TRUE
+	xvar[naline] <- 0
+	yvar[naline] <- 0
+	useline <- !naline;
+	# Table must be initialized for -1's
+	tablex <- numeric(max(xvar)+1)
+	tabley <- numeric(max(yvar)+1)
+	stopifnot(length(xvar) == length(yvar))
+	res <- .C("fastcount",PACKAGE="GCcorrect",
+		tablex = as.integer(tablex), tabley = as.integer(tabley),
+		as.integer(xvar), as.integer(yvar), as.integer(useline),
+		as.integer(length(xvar)))
+	xuse <- which(res$tablex>0)
+	xnames <- xuse - 1
+	resb <- rbind(res$tablex[xuse], res$tabley[xuse]) 
+	colnames(resb) <- xnames
+	return(resb)
+}
+
+
+                                           
+## @knitr
+                                           
+                                           
+#####################################################
+# 9: Computing on the language
+#####################################################
+
+### 9.1 The R interpreter
+
+## @knitr internal-funs
+plot.xy # plot.xy() is called by plot.default()
+print(`%*%`)
+
+                                           
+## @knitr
+                                           
+### 9.2 Parsing code and understanding language objects
+
+## @knitr quote, tidy=FALSE
+obj <- quote(if (x > 1) "orange" else "apple")
+as.list(obj)
+class(obj)
+weirdObj <- quote(`if`(x > 1, 'orange', 'apple'))
+identical(obj, weirdObj)
+
+                                           
+## @knitr type-quote
+x <- 3; typeof(quote(x))
+
+                                           
+## @knitr expr
+myExpr <- expression(x <- 3)
+eval(myExpr)
+typeof(myExpr)
+
+
+## @knitr parsing
+a <- quote(x <- 5)
+b <- expression(x <- 5, y <- 3)
+d <- quote({x <- 5; y <- 3})
+class(a)
+class(b)
+b[[1]]
+class(b[[1]])
+identical(a, b[[1]])
+identical(d[[2]], b[[1]])
+
+                                           
+## @knitr lang-objects, tidy=FALSE
+e0 <- quote(3)
+e1 <- expression(x <- 3) 
+e1m <- expression({x <- 3; y <- 5}) 
+e2 <- quote(x <- 3) 
+e3 <- quote(rnorm(3))
+print(c(class(e0), typeof(e0)))
+print(c(class(e1), typeof(e1)))
+print(c(class(e1[[1]]), typeof(e1[[1]])))
+print(c(class(e1m), typeof(e1m)))
+print(c(class(e2), typeof(e2)))
+identical(e1[[1]], e2)
+print(c(class(e3), typeof(e3)))
+e4 <- quote(-7)
+print(c(class(e4), typeof(e4))) # huh? what does this imply?
+as.list(e4)
+
+
+## @knitr eval-lang
+rm(x)
+eval(e1)
+rm(x)
+eval(e2)
+e1mlist <- as.list(e1m)
+e2list <- as.list(e2)
+eval(as.call(e2list)) 
+## here's how to do it if the language object is actually an expression (multiple statements)
+eval(as.expression(e1mlist))
+
+
+## @knitr expr-structure
+e1 <- expression(x <- 3) 
+## e1 is one-element list with the element an object of class '<-' 
+print(c(class(e1), typeof(e1)))
+e1[[1]]
+as.list(e1[[1]])
+lapply(e1[[1]], class)
+y <- rnorm(5)
+e3 <- quote(mean(y))
+print(c(class(e3), typeof(e3)))
+e3[[1]] 
+print(c(class(e3[[1]]), typeof(e3[[1]])))
+e3[[2]]
+print(c(class(e3[[2]]), typeof(e3[[2]])))
+## we have recursion
+e3 <- quote(mean(c(12,13,15) + rnorm(3)))
+as.list(e3)
+as.list(e3[[2]])
+as.list(e3[[2]][[3]])
+library(pryr)
+call_tree(e3)
+
+
+                                           
+## @knitr
+                                           
+### 9.3 Manipulating the parse tree
+
+## @knitr manip-expr
+out <- quote(y <- 3)
+out[[3]] <- 4
+eval(out)
+y
+
+
+## @knitr manip-expr2
+e1 <- quote(4 + 5)
+e2 <- quote(plot(x, y))
+e2[[1]] <- `+`
+eval(e2)
+e1[[3]] <- e2
+e1
+class(e1[[3]]) # note the nesting
+eval(e1) # what should I get?
+
+
+                                           
+## @knitr deparse
+codeText <- deparse(out)
+parsedCode <- parse(text = codeText) 
+## parse() works like quote() except on the code in the form of a string
+eval(parsedCode)
+deparse(quote(if (x > 1) "orange" else "apple"))
+
+
+## @knitr manip-names
+x3 <- 7
+i <- 3
+as.name(paste('x', i, sep=''))
+eval(as.name(paste('x', i, sep='')))
+assign(paste('x', i, sep = ''), 11)
+x3
+
+
+## @knitr
+                                           
+### 9.4 Parsing replacement expressions
+
+## @knitr replace-lang
+animals <- c('cat', 'dog', 'rat','mouse')
+out1 <- quote(animals[4] <- 'rat') 
+out2 <- quote(`<-`(animals[4], 'rat')) 
+out3 <- quote('[<-'(animals,4,'rat')) 
+as.list(out1)
+as.list(out2)
+identical(out1, out2)
+as.list(out3)
+identical(out1, out3)
+typeof(out1[[2]]) # language
+class(out1[[2]]) # call
+
+
+## @knitr replace-lang2
+eval(out1)
+animals
+animals[4] <- 'mouse'  # reset things to original state
+eval(out3) 
+animals # both do the same thing
+                                           
+
+## @knitr
+                                           
+### 9.5 substitute()
+
+## @knitr substitute
+identical(quote(z <- x^2), substitute(z <- x^2))
+
+
+## @knitr substitute2
+e <- new.env(); e$x <- 3
+substitute(z <- x^2, e)
+
+
+## @knitr crazy-subst
+e$z <- 5
+substitute(z <- x^2, e)
+                                          
+
+## @knitr subst-example
+f <- function(obj){
+objName <- deparse(substitute(obj))
+print(objName)
+}
+f(y)
+
+
+## @knitr subst3
+substitute(a + b, list(a = 1, b = quote(x)))
+
+
+## @knitr subst4
+e1 <- quote(x + y)
+e2 <- substitute(e1, list(x = 3))
+
+
+## @knitr double-subst
+e2 <- substitute(substitute(e, list(x = 3)), list(e = e1))
+substitute(substitute(e, list(x = 3)), list(e = e1)) 
+## so e1 is substituted as an evaluated object, 
+## which then allows for substitution for 'x' 
+e2
+eval(e2)
+substitute_q(e1, list(x = 3))  # from pryr
+
+                                           
 

@@ -1318,7 +1318,9 @@ address(y)
 rm(x, y)
 f <- function(x) sum(x^2)
 y <- rnorm(10)
+## result of next line should be 1 if executed in clean R session
 refs(y)  # from pryr - reports on the NAMED count
+
 f(y)
 refs(y)
 address(y)

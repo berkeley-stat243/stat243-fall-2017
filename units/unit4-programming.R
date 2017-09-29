@@ -1194,7 +1194,7 @@ address(obj$a)
 
 ## @knitr
                                            
-### 8.3 Hidden uses of memory
+### 8.4 Hidden uses of memory
 
 ## @knitr hidden1, eval=FALSE
 x <- rnorm(1e7)
@@ -1223,7 +1223,7 @@ gc()
 
 ## @knitr
                                            
-### 8.4 Passing objects to compiled code
+### 8.5 Passing objects to compiled code
 
 ## @knitr casts, eval=FALSE
 f <- function(arg1){
@@ -1260,7 +1260,7 @@ address(vals)
 
 ## @knitr
                                            
-### 8.5 Delayed copying (copy-on-change)
+### 8.6 Delayed copying (copy-on-change)
 
 ## @knitr copy-on-change-fun, eval=TRUE
 f <- function(x){
@@ -1371,7 +1371,7 @@ myfun(x)
                                            
 ## @knitr
                                            
-### 8.8 Example
+### 8.9 Example
 
 ## @knitr memuse-real, eval = FALSE
 fastcount <- function(xvar, yvar) {

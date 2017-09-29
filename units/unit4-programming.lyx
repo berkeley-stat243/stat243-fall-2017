@@ -6671,6 +6671,22 @@ Challenge 8
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Note for next time: sample() in R does clever thing - uses runif()*n to
+ select one from 1:n, then moves last element of 1:n into position that
+ was selected,then selectinos one from 1:(n-1) and so on; Note that sample
+ is much faster than anything I can come up with in R
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 The goal is to write a very fast function for selecting a random sample
  of size k from a population of size n.
  

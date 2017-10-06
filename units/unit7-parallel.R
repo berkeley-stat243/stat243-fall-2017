@@ -88,7 +88,7 @@ print(result[1:5])
 
 ## @knitr null
 
-### 3.2 Parallel apply functionality
+### 3.3 Parallel apply functionality
 
 ## @knitr parSapply
 
@@ -122,4 +122,46 @@ system.time(
         res <- mclapply(input, looFit, Y, X, mc.cores = nCores) 
 )
 
+## @knitr null
+
+### 3.5 Loading packages and accessing variables in parallel tasks
+
+## @knitr foreach-copies
+
+library(parallel) # one of the core R packages
+library(doParallel)  # loads foreach as a dependency
+
+nCores <- 4  
+registerDoParallel(nCores) 
+
+library(pryr)
+x <- rnorm(10)
+address(x)
+result <- foreach(i = 1:3) %dopar% {
+    set.seed(i)
+    tmp <- address(x) # original address
+    x[3] <- rnorm(1)
+    out <- c(orig = tmp, new = address(x))  
+}
+result
+## note when this is run manually in R, 'x' is not copied
+## when x[3] is modified; not sure why the different behavior
+address(x)
+x[3] <- 2.1
+address(x)
+
+
+## @knitr foreach-not-forked-copies
+
+cl <- makeCluster(4)
+cl  # no forking
+registerDoParallel(cl) 
+
+x <- rnorm(10)
+library(pryr)
+address(x)
+result <- foreach(i = 1:3, .packages = 'pryr') %dopar% {
+    address(x)  # print(.Internal(inspect)) doesn't print to screen
+}
+result
 

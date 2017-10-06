@@ -1135,6 +1135,57 @@ top
 \end_layout
 
 \begin_layout Standard
+Let's experiment with that with foreach where foreach uses forking by default
+ on the machine I'm running this on.
+ Note that this seems to indicate no copy is made until a change is made,
+ but also note what seems strange about the new address of 'x'.
+ I'm not sure what is going on with regard to the latter.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<foreach-copies>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In contrast, when processes are not forked, we can see that a copy is being
+ made for each process from the very beginning:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<foreach-not-forked-copies>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 In contrast, with parallel apply-style statements when starting the cluster
  using the default 
 \emph on

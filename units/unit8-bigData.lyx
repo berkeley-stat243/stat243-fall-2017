@@ -1068,11 +1068,27 @@ ID of user submitting answer 1
 \end_layout
 
 \begin_layout Itemize
+age of user submitting answer 1
+\end_layout
+
+\begin_layout Itemize
+name of user submitting answer 1
+\end_layout
+
+\begin_layout Itemize
 answer 2 ID 
 \end_layout
 
 \begin_layout Itemize
 ID of user submitting answer 2
+\end_layout
+
+\begin_layout Itemize
+age of user submitting answer 2
+\end_layout
+
+\begin_layout Itemize
+name of user submitting answer 2
 \end_layout
 
 \begin_layout Itemize
@@ -1118,6 +1134,14 @@ answer ID
 
 \begin_layout Itemize
 ID of user submitting answer
+\end_layout
+
+\begin_layout Itemize
+age of user submitting answer
+\end_layout
+
+\begin_layout Itemize
+name of user submitting answer
 \end_layout
 
 \begin_layout Standard

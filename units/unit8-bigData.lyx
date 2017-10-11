@@ -3496,8 +3496,8 @@ write out the {key,result} pair
 \end_layout
 
 \begin_layout Standard
-A similar paradigm that is being implemented in some R packages by Hadley
- Wickham is the split-apply-combine strategy (
+A similar paradigm that is implemented in dplry is the split-apply-combine
+ strategy (
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.jstatsoft.org/v40/i01/paper"
@@ -3505,6 +3505,10 @@ target "http://www.jstatsoft.org/v40/i01/paper"
 \end_inset
 
 ).
+\end_layout
+
+\begin_layout Standard
+HERE
 \end_layout
 
 \begin_layout Standard

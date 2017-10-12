@@ -4197,7 +4197,12 @@ http://<master_url>:50070 -- information about the HDFS
 \begin_layout Standard
 On Savio, I haven't found a way to view the interfaces in a standard web
  browser as one would usually do.
- So we'll have to try to read the raw HTML.
+ So we'll have to try to read the raw HTML or use a text-based browser like
+ 
+\emph on
+lynx
+\emph default
+.
 \end_layout
 
 \begin_layout Standard
@@ -4206,36 +4211,16 @@ When one runs
 spark-start
 \emph default
  on Savio, it mentions some log files.
- If you look in the log file for the master, you should see a line like
- this that indicates what the <master_url> is (here it is 10.0.5.93):
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{verbatim}
-\end_layout
-
-\begin_layout Plain Layout
-
-17/10/10 22:31:09 INFO MasterWebUI: Started MasterWebUI at http://10.0.5.93:8080
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{verbatim}
-\end_layout
-
+ If you look in the log file for the master, you should see a line that
+ says 
+\begin_inset Quotes eld
 \end_inset
 
+Started MasterWebUI at http://10.0.5.93:8080
+\begin_inset Quotes erd
+\end_inset
 
+ that indicates what the <master_url> is (here it is 10.0.5.93):
 \end_layout
 
 \begin_layout Subsubsection
@@ -4309,14 +4294,6 @@ repartition()
 Note that all of the various operations are OOP methods applied to either
  the SparkContext management object or to a Spark dataset, called a Resilient
  Distributed Dataset (RDD).
- Here `lines` and `counts` are both RDDs.
- However the result of `collect()` is just a standard Python object.
-\end_layout
-
-\begin_layout Standard
-Note that all of the various operations are OOP methods applied to either
- the SparkContext management object or to a Spark dataset, called a Resilient
- Distributed Dataset (RDD).
  Here 
 \emph on
 lines, obama,
@@ -4348,9 +4325,9 @@ Finding the median of a set of values is an example where we don't have
 \end_layout
 
 \begin_layout Standard
-As an example we'll find the median page size by language (this is not a
- particularly interesting/useful computation in this dataset, but I wanted
- to illustrate how this works.
+As an example we could find the median page size by language (this is not
+ a particularly interesting/useful computation in this dataset, but I wanted
+ to illustrate how this would work).
 \end_layout
 
 \begin_layout Standard
@@ -4379,9 +4356,16 @@ Note that because we need to aggregate all the data by key before doing
 \end_layout
 
 \begin_layout Standard
-Note that I haven't run this because Python 2.6.6 on Savio doesn't have numpy
- installed and the Python pip installer is also not available, so getting
- the software in shape would be somewhat involved.
+Note that I haven't run this because Python 2.6.6 on Savio doesn't have 
+\emph on
+numpy
+\emph default
+ installed and the Python 
+\emph on
+pip
+\emph default
+ installer is also not available, so getting the software set up would be
+ somewhat involved.
 \end_layout
 
 \begin_layout Subsubsection
@@ -4464,13 +4448,10 @@ obama_plot.R
 
 \begin_layout Standard
 \begin_inset Float figure
+placement H
 wide false
 sideways false
 status open
-
-\begin_layout Plain Layout
-
-\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Graphics
@@ -4610,14 +4591,26 @@ use dplyr functionality
 \end_layout
 
 \begin_layout Itemize
-use distributed apply computations via `spark_apply`.
+use distributed apply computations via 
+\emph on
+spark_apply()
+\emph default
+.
 \end_layout
 
 \begin_layout Standard
-There are some limitations though -- the dplyr functionality translates
- operations to SQL so there are limited operations one can do, particularly
- in terms of computations on a given row of data.
+There are some limitations though:
+\end_layout
+
+\begin_layout Itemize
+the dplyr functionality translates operations to SQL so there are limited
+ operations one can do, particularly in terms of computations on a given
+ row of data.
  
+\end_layout
+
+\begin_layout Itemize
+
 \emph on
 spark_apply()
 \emph default

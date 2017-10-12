@@ -22,5 +22,7 @@ module purge
 module load java spark 
 source /global/home/groups/allhands/bin/spark_helper.sh
 spark-start
-spark-submit --master $SPARK_URL test_batch.py
+# putting path to test_batch.py shouldn't be necessary but
+# for some reason current working directory not being used
+spark-submit --master $SPARK_URL $HOME/stat243-fall-2017/units/test_batch.py
 spark-stop

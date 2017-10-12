@@ -62,7 +62,7 @@ def stratify(line):
 
 # sum number of hits for each date-time-language value
 counts = obama.map(stratify).reduceByKey(add)  # 5 minutes
-# 128889
+# 128889 for full dataset
 
 ### map step to prepare output ###
 
@@ -74,7 +74,8 @@ def transform(vals):
 ### output to file ###
 
 # have one partition because one file per partition is written out
-counts.map(transform).repartition(1).saveAsTextFile(dir + '/' + 'obama-counts') # 5 sec.
+outputDir = dir + '/' + 'obama-counts'
+counts.map(transform).repartition(1).saveAsTextFile(outputDir) # 5 sec.
 
 ## @knitr 
 
@@ -91,7 +92,7 @@ def computeKeyValue(line):
 def medianFun(input):
     # input[1] is an iterable object containing the page sizes for one key
     # this list comprehension syntax creates a list from the iterable object
-    med = np.median([val[0] for val in input[1]])
+    med = np.median([val for val in input[1]])
     # input[0] is the key
     # return a tuple of the key and the median for that key
     return((input[0], med))

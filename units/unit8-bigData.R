@@ -571,6 +571,4 @@ library(DBI)
 ## reference the Spark table not the R tbl_spark interface object
 wiki_en2 <- dbGetQuery(sc,
             "SELECT * FROM wikistats WHERE lang = 'en' LIMIT 10")
-
-## the surprisingly non-PG rated results:
 wiki_en2

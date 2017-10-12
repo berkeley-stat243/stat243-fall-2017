@@ -199,6 +199,11 @@ read_chunk('unit8-bigData.py')
 
 \begin_layout Plain Layout
 
+read_chunk('unit8-bigData.sh') 
+\end_layout
+
+\begin_layout Plain Layout
+
 library(ff)
 \end_layout
 
@@ -3496,8 +3501,11 @@ write out the {key,result} pair
 \end_layout
 
 \begin_layout Standard
-A similar paradigm that is implemented in dplry is the split-apply-combine
- strategy (
+A similar paradigm that is implemented in 
+\emph on
+dplyr
+\emph default
+ is the split-apply-combine strategy (
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.jstatsoft.org/v40/i01/paper"
@@ -3508,7 +3516,9 @@ target "http://www.jstatsoft.org/v40/i01/paper"
 \end_layout
 
 \begin_layout Standard
-HERE
+Note that the idea of concepts of map and reduce are core concepts in functional
+ programming (and that we said R was a functional programming language).
+ The various apply commands are a version of a map operation in base R.
 \end_layout
 
 \begin_layout Standard
@@ -3553,6 +3563,8 @@ rhdfs
 rhbase
 \emph default
  packages.
+ Given the popularity of Spark, I'm not sure how much usage these approaches
+ currently see.
  For more details on 
 \emph on
 RHadoop
@@ -3587,8 +3599,8 @@ ff
 \emph default
  because we kept everything in memory, Spark should be faster than Hadoop
  when the data will fit in the collective memory of multiple nodes.
- In cases where it does not, Spark will make use of the HDFS.
- 
+ In cases where it does not, Spark will make use of the HDFS (and generally,
+ Spark will be reading the data initially from HDFS.)
 \end_layout
 
 \begin_layout Subsection
@@ -3774,186 +3786,25 @@ A few additional comments.
 Spark
 \end_layout
 
+\begin_layout Subsubsection
+Overview
+\end_layout
+
 \begin_layout Standard
 We'll focus on Spark rather than Hadoop for the speed reasons described
- above and because I think Spark provides a very nice environment in which
- to work.
- Plus it comes out of the AmpLab here at Berkeley.
- One downside is we'll have to know a bit of Python to use it.
-\end_layout
-
-\begin_layout Subsubsection
-Getting set up on Spark and the HDFS
-\end_layout
-
-\begin_layout Standard
-We'll use Spark on an Amazon EC2 virtual cluster.
- Thankfully, Spark provides a Python-based script for setting up such a
- cluster.
- Occasionally the setup process goes awry but usually it's pretty easy.
- We need our Amazon authentication keys as well as public-private keypair
- for SSH.
+ above and because I think Spark provides a very nice environment/interface
+ in which to work.
+ Plus it comes out of the (former) AmpLab here at Berkeley.
+ We'll start with the Python interface to Spark and then see a bit of the
  
-\series bold
-Make sure you don't hard code your Amazon key information into any public
- file (including Github public repositories) - hackers will find the keys
- and use them to spin up instances, probably to mine bitcoin or send Spam;
- this happened in this class in 2014.
-\end_layout
-
-\begin_layout Standard
-We start by 
-\begin_inset CommandInset href
-LatexCommand href
-name "downloading the Spark package"
-target "https://spark.apache.org/downloads.html"
-
-\end_inset
-
- as a .tgz file (choosing the 
-\begin_inset Quotes eld
-\end_inset
-
-source code
-\begin_inset Quotes erd
-\end_inset
-
- option) and untarring/zipping it.
- This all works from the VM.
- Also, on the SCF it's available on the Linux machines at 
 \emph on
-/usr/local/src/pd/spark-1.4.0/spark-1.4.0/ec2
+sparklyr
 \emph default
-.
- 
+ R package for interfacing with Spark.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex Chunk
-status open
-
-\begin_layout Plain Layout
-
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-spark-setup, eval=FALSE, engine='bash'
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Next let's get the airline dataset onto the master node and then into the
- HDFS.
- Note that the file system commands are like standard UNIX commands, but
- you need to do 
-\family typewriter
-hadoop fs -
-\family default
- in front of the command.
- At the end of this chunk we'll start the Python interface for Spark.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex Chunk
-status open
-
-\begin_layout Plain Layout
-
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-spark-hdfs, eval=FALSE, engine='bash'
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
-
-\begin_layout Subsubsection
-Using Spark for pre-processing
-\end_layout
-
-\begin_layout Standard
-Now we'll do some basic manipulations with the airline dataset.
- We'll count the number of lines/observations in our dataset.
- Then we'll do a map-reduce calculation that involves counting the number
- of flights by airline, so airline will serve as the key.
- 
-\end_layout
-
-\begin_layout Standard
-Note that all of the various operations are OOP methods applied to either
- the SparkContext management object or to a Spark dataset, called a Resilient
- Distributed Dataset (RDD).
- Here 
-\emph on
-lines
-\emph default
- and 
-\emph on
-output
-\emph default
- are both RDDs.
- However the result of 
-\emph on
-collect()
-\emph default
- is just a standard Python object.
-\end_layout
-
-\begin_layout Standard
-In the last step, let's compare how long it took to grab the SFO subset
- relative to the performance of R earlier in this Unit.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex Chunk
-status open
-
-\begin_layout Plain Layout
-
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-spark-data, eval=FALSE, engine='bash'
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Let's consider some of the core methods we used.
- The 
+More details on Spark are in the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Spark programming guide"
@@ -3961,7 +3812,433 @@ target "http://spark.apache.org/docs/latest/programming-guide.html"
 
 \end_inset
 
- discusses these and a number of others.
+.
+\end_layout
+
+\begin_layout Standard
+Some key aspects of Spark:
+\end_layout
+
+\begin_layout Itemize
+Spark can read/write from various locations, but a standard location is
+ the HDFS, with read/write done in parallel across the cores of the Spark
+ cluster.
+ 
+\end_layout
+
+\begin_layout Itemize
+The basic data structure in Spark is a 
+\emph on
+Resilient Distributed Dataset (RDD)
+\emph default
+, which is basically a distributed dataset of individual units, often individual
+ rows loaded from text files.
+ 
+\end_layout
+
+\begin_layout Itemize
+RDDs are stored in chunks called 
+\emph on
+partitions
+\emph default
+, stored on the different nodes of the cluster (either in memory or if necessary
+ on disk).
+ 
+\end_layout
+
+\begin_layout Itemize
+Spark has a core set of methods that can be applied to RDDs to do operations
+ such as filtering/subsetting, transformation/mapping, reduction, and others.
+ 
+\end_layout
+
+\begin_layout Itemize
+The operations are done in parallel on the different partitions of the data
+ 
+\end_layout
+
+\begin_layout Itemize
+Some operations such as reduction generally involve a 
+\emph on
+shuffle
+\emph default
+, moving data between nodes of the cluster.
+ This is costly.
+ 
+\end_layout
+
+\begin_layout Itemize
+Recent versions of Spark have distributed DataFrames and the ability to
+ run SQL queries on the data.
+\end_layout
+
+\begin_layout Standard
+Question: what do you think are the tradeoffs involved in determining the
+ number of partitions to use?
+\end_layout
+
+\begin_layout Standard
+Note that some headaches with Spark include:
+\end_layout
+
+\begin_layout Itemize
+whether and how to set the amount of memory available for Spark workers
+ (executor memory) and the Spark master process (driver memory) 
+\end_layout
+
+\begin_layout Itemize
+hard-to-diagnose failures (including out-of-memory issues)
+\end_layout
+
+\begin_layout Subsubsection
+Getting started
+\end_layout
+
+\begin_layout Standard
+We'll use Spark on Savio.
+ You can also use Spark on XSEDE Bridges (among other XSEDE resources),
+ and via commercial cloud computing providers, as well as on your laptop
+ (but obviously only to experiment with small datasets).
+ The demo works with a dataset of Wikipedia traffic, ~110 GB of zipped data
+ (~500 GB unzipped) from October-December 2008, though for in-class presentation
+ we'll work with a much smaller set of 7 days of data.
+\end_layout
+
+\begin_layout Standard
+The Wikipedia traffic are available through Amazon Web Services storage.
+ The steps to get it are:
+\end_layout
+
+\begin_layout Enumerate
+Start an AWS EC2 virtual machine that mounts the data onto the VM 
+\end_layout
+
+\begin_layout Enumerate
+Install Globus on the VM 
+\end_layout
+
+\begin_layout Enumerate
+Transfer the data to Savio via Globus
+\end_layout
+
+\begin_layout Standard
+Details on how I did this are in 
+\emph on
+get_wikipedia_data.sh
+\emph default
+.
+\end_layout
+
+\begin_layout Subsubsection
+Storing data for use in Spark
+\end_layout
+
+\begin_layout Standard
+In many Spark contexts, the data would be stored in a distributed fashion
+ across the hard drives attached to different nodes of a cluster (i.e., in
+ the HDFS).
+ 
+\end_layout
+
+\begin_layout Standard
+On Savio, Spark is set up to just use the scratch file system, so one would
+ NOT run the code here, but I'm including it to give a sense for what it's
+ like to work with HDFS.
+ First we would need to get the data from the standard filesystem to the
+ HDFS.
+ Note that the file system commands are like standard UNIX commands, but
+ you need to do `hadoop fs` in front of the command.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<hdfs, engine='bash', eval=FALSE>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Using Spark on Savio
+\end_layout
+
+\begin_layout Standard
+Here are the steps to use Spark on Savio.
+ We'll demo using an interactive job but one could include these commands
+ in the SLURM job script.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<savio-spark-setup, engine='bash', eval=FALSE>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The current Spark setup is a bit out of date and will be updated in the
+ next couple months.
+ But for now, we'll have to live with a few shortcomings.
+\end_layout
+
+\begin_layout Standard
+First make sure only the default Python 2.6.6 is loaded.
+ We can now use Spark via the Python interface interactively.
+ We'll see how to submit batch jobs later.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<pyspark-start, engine='bash', eval=FALSE>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Preprocessing the Wikipedia traffic data
+\end_layout
+
+\begin_layout Standard
+At this point, one complication is that the date-time information on the
+ Wikipedia traffic is embedded in the file names.
+ We'd like that information to be fields in the data files.
+ This is done by running the code in 
+\emph on
+preprocess_wikipedia.py
+\emph default
+ in the Python interface to Spark (pyspark).
+ Note that trying to use multiple nodes and to repartition in various ways
+ caused various errors I was unable to diagnose, but the code as is should
+ work albeit somewhat slowly.
+\end_layout
+
+\begin_layout Standard
+In principle one could run the 
+\emph on
+preprocess_wikipedia.sh
+\emph default
+ SLURM job script to run 
+\emph on
+preprocess_wikipedia.py
+\emph default
+ as a batch submission, but I was having problems getting that to run successful
+ly.
+\end_layout
+
+\begin_layout Subsubsection
+Spark in action: processing the Wikipedia traffic data
+\end_layout
+
+\begin_layout Standard
+Now we'll do some basic manipulations with the Wikipedia dataset, with the
+ goal of analyzing traffic to Barack Obama's sites during the time around
+ his election as president in 2008.
+ Here are the steps we'll follow:
+\end_layout
+
+\begin_layout Itemize
+Count the number of lines/observations in our dataset.
+\end_layout
+
+\begin_layout Itemize
+Filter to get only the Barack Obama sites.
+\end_layout
+
+\begin_layout Itemize
+Map step that creates key-value pairs from each record/observation/row.
+\end_layout
+
+\begin_layout Itemize
+Reduce step that counts the number of views by hour and language, so hour-day-la
+ng will serve as the key.
+ 
+\end_layout
+
+\begin_layout Itemize
+Map step to prepare the data so it can be output in a nice format.
+\end_layout
+
+\begin_layout Standard
+Note that Spark uses 
+\emph on
+lazy evaluation
+\emph default
+.
+ Actual computation only happens when one asks for a result to be returned
+ or output written to disk.
+\end_layout
+
+\begin_layout Standard
+First we'll see how we read in the data and filter to the observations (lines
+ / rows) of interest.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<read-filter, engine='python', eval=FALSE>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now let's use the mapReduce paradigm to get the aggregate statistics we
+ want.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<map-reduce, engine='python', eval=FALSE>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+Now we'll do some basic manipulations with the airline dataset.
+ We'll count the number of lines/observations in our dataset.
+ Then we'll do a map-reduce calculation that involves counting the number
+ of flights by airline, so airline will serve as the key.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Spark monitoring
+\end_layout
+
+\begin_layout Standard
+There are various interfaces to monitor Spark and the HDFS.
+\end_layout
+
+\begin_layout Itemize
+http://<master_url>:8080 -- general information about the Spark cluster
+ 
+\end_layout
+
+\begin_layout Itemize
+http://<master_url>:4040 -- information about the Spark tasks being executed
+ 
+\end_layout
+
+\begin_layout Itemize
+http://<master_url>:50070 -- information about the HDFS
+\end_layout
+
+\begin_layout Standard
+On Savio, I haven't found a way to view the interfaces in a standard web
+ browser as one would usually do.
+ So we'll have to try to read the raw HTML.
+\end_layout
+
+\begin_layout Standard
+When one runs 
+\emph on
+spark-start
+\emph default
+ on Savio, it mentions some log files.
+ If you look in the log file for the master, you should see a line like
+ this that indicates what the <master_url> is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{verbatim}
+\end_layout
+
+\begin_layout Plain Layout
+
+17/10/10 22:31:09 INFO MasterWebUI: Started MasterWebUI at http://10.0.5.93:8080
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Spark operations
+\end_layout
+
+\begin_layout Standard
+Let's consider some of the core methods we used.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+filter()
+\emph default
+: create a subset 
 \end_layout
 
 \begin_layout Itemize
@@ -3969,7 +4246,7 @@ target "http://spark.apache.org/docs/latest/programming-guide.html"
 \emph on
 map()
 \emph default
-: take an RDD and apply a function to each element, returning an RDD
+: take an RDD and apply a function to each element, returning an RDD 
 \end_layout
 
 \begin_layout Itemize
@@ -3982,22 +4259,12 @@ reduce()
 reduceByKey()
 \emph default
 : take an RDD and apply a reduction operation to the elements, doing the
- reduction stratified by the key values for 
-\emph on
-reduceByKey()
-\emph default
-.
- Reduction functions need to be associative and commutative and take 2 arguments
- and return 1, all so that they can be done in parallel in a straightforward
- way.
-\end_layout
-
-\begin_layout Itemize
-
-\emph on
-filter()
-\emph default
-: create a subset
+ reduction stratified by the key values for reduceByKey().
+ Reduction functions need to be associative (order across records doesn't
+ matter) and commutative (order of arguments doesn't matter) and take 2
+ arguments and return 1, all so that they can be done in parallel in a straightf
+orward way.
+ 
 \end_layout
 
 \begin_layout Itemize
@@ -4005,7 +4272,7 @@ filter()
 \emph on
 collect()
 \emph default
-: collect results back to the master
+: collect results back to the master 
 \end_layout
 
 \begin_layout Itemize
@@ -4013,7 +4280,7 @@ collect()
 \emph on
 cache()
 \emph default
-: tell Spark to keep the RDD in memory for later use
+: tell Spark to keep the RDD in memory for later use 
 \end_layout
 
 \begin_layout Itemize
@@ -4021,17 +4288,44 @@ cache()
 \emph on
 repartition()
 \emph default
-: rework the RDD so it is in the specified number of chunks
+: rework the RDD so it is divided into the specified number of partitions
 \end_layout
 
 \begin_layout Standard
-Question: how many chunks do you think we want the RDD split into? What
- might the tradeoffs be?
+Note that all of the various operations are OOP methods applied to either
+ the SparkContext management object or to a Spark dataset, called a Resilient
+ Distributed Dataset (RDD).
+ Here `lines` and `counts` are both RDDs.
+ However the result of `collect()` is just a standard Python object.
 \end_layout
 
 \begin_layout Standard
-Here's an example where we don't have a simple commutative/associative reducer
- function.
+Note that all of the various operations are OOP methods applied to either
+ the SparkContext management object or to a Spark dataset, called a Resilient
+ Distributed Dataset (RDD).
+ Here 
+\emph on
+lines, obama,
+\emph default
+ and 
+\emph on
+counts
+\emph default
+ are all RDDs.
+ However the result of 
+\emph on
+collect()
+\emph default
+ is just a standard Python object.
+\end_layout
+
+\begin_layout Subsubsection
+Nonstandard reduction
+\end_layout
+
+\begin_layout Standard
+Finding the median of a set of values is an example where we don't have
+ a simple commutative/associative reducer function.
  Instead we group all the observations for each key into a so-called iterable
  object.
  Then our second map function treats each key as an element, iterating over
@@ -4040,21 +4334,101 @@ Here's an example where we don't have a simple commutative/associative reducer
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex Chunk
+As an example we'll find the median page size by language (this is not a
+ particularly interesting/useful computation in this dataset, but I wanted
+ to illustrate how this works.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
 status open
 
 \begin_layout Plain Layout
 
-\begin_inset Argument 1
-status open
+<<median, engine='python', eval=FALSE>>=
+\end_layout
 
 \begin_layout Plain Layout
-spark-nonstandard, eval=FALSE, engine='bash'
+
+@
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Note that because we need to aggregate all the data by key before doing
+ the reduction on the full data in each key, this is much slower than a
+ reduce operation like max or mean.
+\end_layout
+
+\begin_layout Standard
+Note that I haven't run this because Python 2.6.6 on Savio doesn't have numpy
+ installed and the Python pip installer is also not available, so getting
+ the software in shape would be somewhat involved.
+\end_layout
+
+\begin_layout Subsubsection
+Spark DataFrames and SQL queries
+\end_layout
+
+\begin_layout Standard
+In recent versions of Spark, one can work with more structured data objects
+ than RDDs.
+ Spark now provides 
+\emph on
+DataFrames
+\emph default
+, which are collections of 
+\emph on
+Row
+\emph default
+ objects and behave like distributed versions of R or Pandas dataframes.
+ They can also be queried using SQL syntax.
+\end_layout
+
+\begin_layout Standard
+Here's some example code for using DataFrames.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<DataFrames, engine='python', eval=FALSE>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And here's how we use SQL with a DataFrame:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<spark-sql, engine='python', eval=FALSE>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
 \end_layout
 
 \end_inset
@@ -4063,272 +4437,62 @@ spark-nonstandard, eval=FALSE, engine='bash'
 \end_layout
 
 \begin_layout Subsubsection
-Using Spark for fitting models
+Analysis results
 \end_layout
 
 \begin_layout Standard
-Here we'll see the use of Spark to fit basic regression models in two ways.
- Warning: there may well be better algorithms to use and there may be better
- ways to implement these algorithms in Spark.
- But these work and give you the idea of how you can implement fitting within
- the constraints of a map-reduce paradigm.
+The file 
+\emph on
+obama_plot.R
+\emph default
+ does some manipulations to plot the hits as a function of time, shown here:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename obamaTraffic.pdf
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Obama Wikipedia traffic results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So there you have it -- from big data (500 GB unzipped) to knowledge (a
+ 17 KB file of plots).
  
-\end_layout
-
-\begin_layout Standard
-Note that my first step is to repartition the data for better computational
- efficiency.
- Instead of having the data split into 22 year-specific chunks that vary
- in size (which is how things are initially because of the initial file
- structure), I'm going to split into a larger number of equal-size chunks
- to get better load-balancing.
-\end_layout
-
-\begin_layout Paragraph
-Linear regression via sufficient statistics
-\end_layout
-
-\begin_layout Standard
-In the first algorithm we actually compute the sufficient statistics, which
- are simply 
-\begin_inset Formula $X^{\top}X$
-\end_inset
-
- and 
-\begin_inset Formula $X^{\top}Y$
-\end_inset
-
-.
- Because the number of predictors is small, these are miniscule compared
- to the size of the dataset.
- This code has two ways of computing the matrices.
- The first treats each line as an observation and sums the 
-\begin_inset Formula $X_{i}^{\top}X_{i}$
-\end_inset
-
- and 
-\begin_inset Formula $X_{i}Y_{i}$
-\end_inset
-
- values across all observations.
- The second uses a map function that can operate on an entire partition,
- iterating through the elements of the partition, and computing 
-\begin_inset Formula $X_{k}^{\top}X_{k}$
-\end_inset
-
- and 
-\begin_inset Formula $X_{k}^{\top}Y_{k}$
-\end_inset
-
- for each partition, 
-\begin_inset Formula $k$
-\end_inset
-
-.
- The second way is rather faster.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex Chunk
-status open
-
-\begin_layout Plain Layout
-
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-spark-fit1, eval=FALSE, engine='python'
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph
-Linear regression via cyclic coordinate descent
-\end_layout
-
-\begin_layout Standard
-In the second algorithm we pretend that we don't want to compute 
-\begin_inset Formula $X^{\top}X$
-\end_inset
-
-, mimicing the situation in which we have too many predictors to either
- store 
-\begin_inset Formula $X^{\top}X$
-\end_inset
-
- or to do linear algebra on 
-\begin_inset Formula $X^{\top}X$
-\end_inset
-
-.
- Instead we'll have a vector of starting values for 
-\begin_inset Formula $\beta$
-\end_inset
-
-.
- Then we'll cycle through each element of 
-\begin_inset Formula $\beta$
-\end_inset
-
- and optimize that element, holding the others constant.
- The individual update steps look like this:
-\begin_inset Formula 
-\[
-\beta_{p}^{t+1}=\frac{\sum_{i}r_{i}x_{i}}{\sum_{i}x_{ip}^{2}}
-\]
-
-\end_inset
-
-where 
-\begin_inset Formula $r_{i}$
-\end_inset
-
- the residual not including the 
-\begin_inset Formula $p$
-\end_inset
-
-th predictor: 
-\begin_inset Formula $\sum_{i}\left(y_{i}-\sum_{j\ne p}x_{ij}\beta_{j}^{t}\right)$
-\end_inset
-
- and based on the current parameter values.
-\end_layout
-
-\begin_layout Standard
-Once again, we'll use 
-\emph on
-mapPartitions()
-\emph default
- to do the calculations we need for each step of the optimization piecewise
- on each partition (I use 
-\emph on
-batch
-\emph default
- to describe this in the code).
- Note that the result after 10 iterations here is not the MLE, though most
- of the day of week effects are all shifted by a common amount relative
- to the mean when compared to the MLE.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex Chunk
-status open
-
-\begin_layout Plain Layout
-
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-spark-fit2, eval=FALSE, engine='python'
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We've only done linear regression here, but similar coordinate descent computati
-ons can be done for GLMs and for Lasso type problems, and probably for other
- types of models.
- In fact coordinate descent is a (the?) standard algorithm for Lasso as
- discussed in 
-\begin_inset CommandInset href
-LatexCommand href
-target "this paper"
-
-\end_inset
-
-, which describes the methods in the 
-\emph on
-glmnet
-\emph default
- package.
-\end_layout
-
-\begin_layout Paragraph
-Linear regression via gradient descent
-\end_layout
-
-\begin_layout Standard
-Cycling through each coefficient has the obvious disadvantage of having
- to cycle through each coefficient, which would become particularly problematic
- in a model with more predictors.
- An alternative is to do gradient descent on the entire vector of coefficients
- at once.
- For this problem the update at each step looks like this
-\begin_inset Formula 
-\[
-\beta^{t+1}=\beta^{t}-\alpha\nabla L(\beta^{t})
-\]
-
-\end_inset
-
- where 
-\begin_inset Formula $\nabla L(\beta^{t})$
-\end_inset
-
- is the gradient vector of the log-likelihood evaluated at the current value,
- 
-\begin_inset Formula $\beta^{t}$
-\end_inset
-
-.
- A key issue here, which we'll discuss in detail in the Unit on optimization
- is the step size, 
-\begin_inset Formula $\alpha$
-\end_inset
-
-, also known as the learning rate.
- Here's the code for doing gradient descent on the entire set of coefficients.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex Chunk
-status open
-
-\begin_layout Plain Layout
-
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-spark-fit3, eval=FALSE, engine='python'
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that I'm recording the value of the objective function to make sure
- that it is decreasing in every iteration, as one could set the learning
- rate such that that does not happen.
 \end_layout
 
 \begin_layout Subsubsection
-Final comments
+Other comments
 \end_layout
 
 \begin_layout Paragraph
@@ -4338,39 +4502,27 @@ Running a batch Spark job
 \begin_layout Standard
 We can run a Spark job using Python code as a batch script rather than interacti
 vely.
- Here's an example, which computes the value of 
-\begin_inset Formula $\pi$
-\end_inset
-
- by Monte Carlo simulation (more on the general technique in the Unit on
- simulation).
- Assuming the script is named 
-\emph on
-piCalc.py
-\emph default
-, we would call the script like this: 
-\family typewriter
-spark-submit piCalc.py 100000000 1000
-\family default
+ Here's an example, which computes the value of Pi by Monte Carlo simulation.
  
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex Chunk
+\begin_inset ERT
 status open
 
 \begin_layout Plain Layout
 
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-pyspark-script, eval=FALSE, engine='python'
+<<spark-submit, engine='bash', eval=FALSE>>=
 \end_layout
 
-\end_inset
+\begin_layout Plain Layout
 
+spark-submit --master $SPARK_URL $SPARK_DIR/examples/src/main/python/pi.py
+\end_layout
 
+\begin_layout Plain Layout
+
+@
 \end_layout
 
 \end_inset
@@ -4379,12 +4531,18 @@ pyspark-script, eval=FALSE, engine='python'
 \end_layout
 
 \begin_layout Standard
-This code again uses the idea that it's computationally more efficient to
- have each operation occur on a batch of data rather than an individual
- data point.
- So there are 1000 tasks and the total number of samples is broken up amongst
- those tasks.
- In fact, Spark has problems if the number of tasks gets too large.
+The file 
+\emph on
+example_spark_job.sh
+\emph default
+ is an example SLURM job submission script that runs the PySpark code in
+ 
+\emph on
+test_batch.py
+\emph default
+.
+ If you want to run a Spark job as a batch submission to the scheduler you
+ can follow this example.
 \end_layout
 
 \begin_layout Paragraph
@@ -4401,7 +4559,6 @@ Spark is implemented natively in Java and Scala, so all calculations in
  Here's a 
 \begin_inset CommandInset href
 LatexCommand href
-name "small bit of info"
 target "http://apache-spark-user-list.1001560.n3.nabble.com/Scala-vs-Python-performance-differences-td4247.html"
 
 \end_inset
@@ -4409,14 +4566,84 @@ target "http://apache-spark-user-list.1001560.n3.nabble.com/Scala-vs-Python-perf
  on that.
 \end_layout
 
-\begin_layout Paragraph
-sparkR
+\begin_layout Subsubsection
+R interfaces to Spark
 \end_layout
 
 \begin_layout Standard
-Finally, there is an R interface for Spark, but it's pretty new and not
- as widely used, so I didn't think it worth covering.
+Both 
+\emph on
+SparkR
+\emph default
+ (from the Spark folks) and 
+\emph on
+sparklyr
+\emph default
+ (from the RStudio folks) allow you to interact with Spark-based data from
+ R.
+ There are some limitations to what you can do (both in what is possible
+ and in what will execute with reasonable speed), so for heavy use of Spark
+ you may want to use Python or even the Scala or Java interfaces.
+ We'll focus on sparklyr.
+\end_layout
+
+\begin_layout Standard
+With sparklyr, you can:
+\end_layout
+
+\begin_layout Itemize
+use dplyr functionality 
+\end_layout
+
+\begin_layout Itemize
+use distributed apply computations via `spark_apply`.
+\end_layout
+
+\begin_layout Standard
+There are some limitations though -- the dplyr functionality translates
+ operations to SQL so there are limited operations one can do, particularly
+ in terms of computations on a given row of data.
  
+\emph on
+spark_apply()
+\emph default
+ appears to run very slowly, presumably because data is being serialized
+ back and forth between R and Java data structures.
+\end_layout
+
+\begin_layout Subsubsection
+sparklyr example
+\end_layout
+
+\begin_layout Standard
+I haven't been able to get 
+\emph on
+sparklyr
+\emph default
+ to work on Savio, so time permitting, we'll just demonstrate on my desktop.
+\end_layout
+
+\begin_layout Standard
+Here's some example code:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<sparklyr, eval=FALSE>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body

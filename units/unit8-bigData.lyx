@@ -3868,8 +3868,11 @@ shuffle
 \end_layout
 
 \begin_layout Itemize
-Recent versions of Spark have distributed DataFrames and the ability to
- run SQL queries on the data.
+Recent versions of Spark have a distributed 
+\emph on
+DataFrame
+\emph default
+ data structure and the ability to run SQL queries on the data.
 \end_layout
 
 \begin_layout Standard
@@ -3896,12 +3899,12 @@ Getting started
 
 \begin_layout Standard
 We'll use Spark on Savio.
- You can also use Spark on XSEDE Bridges (among other XSEDE resources),
- and via commercial cloud computing providers, as well as on your laptop
- (but obviously only to experiment with small datasets).
+ You can also use Spark on NSF's XSEDE Bridges supercomputer (among other
+ XSEDE resources), and via commercial cloud computing providers, as well
+ as on your laptop (but obviously only to experiment with small datasets).
  The demo works with a dataset of Wikipedia traffic, ~110 GB of zipped data
  (~500 GB unzipped) from October-December 2008, though for in-class presentation
- we'll work with a much smaller set of 7 days of data.
+ we'll work with a much smaller set of 1 day of data.
 \end_layout
 
 \begin_layout Standard
@@ -3927,6 +3930,11 @@ Details on how I did this are in
 get_wikipedia_data.sh
 \emph default
 .
+ The resulting data are available to you in 
+\emph on
+/global/scratch/paciorek/wikistats_full/raw
+\emph default
+ on Savio.
 \end_layout
 
 \begin_layout Subsubsection
@@ -3947,7 +3955,11 @@ On Savio, Spark is set up to just use the scratch file system, so one would
  First we would need to get the data from the standard filesystem to the
  HDFS.
  Note that the file system commands are like standard UNIX commands, but
- you need to do `hadoop fs` in front of the command.
+ you need to do 
+\family typewriter
+hadoop fs
+\family default
+ in front of the command.
  
 \end_layout
 
@@ -3976,8 +3988,12 @@ Using Spark on Savio
 
 \begin_layout Standard
 Here are the steps to use Spark on Savio.
- We'll demo using an interactive job but one could include these commands
- in the SLURM job script.
+ We'll demo using an interactive job (the 
+\emph on
+srun
+\emph default
+ line here) but one could include the last three commands in the SLURM job
+ script.
 \end_layout
 
 \begin_layout Standard
@@ -4046,14 +4062,16 @@ preprocess_wikipedia.py
  Note that trying to use multiple nodes and to repartition in various ways
  caused various errors I was unable to diagnose, but the code as is should
  work albeit somewhat slowly.
+ The resulting data are available to you in 
+\emph on
+/global/scratch/paciorek/wikistats_full/dated
+\emph default
+.
+ These are the data you will use for PS6.
 \end_layout
 
 \begin_layout Standard
-In principle one could run the 
-\emph on
-preprocess_wikipedia.sh
-\emph default
- SLURM job script to run 
+In principle one could run 
 \emph on
 preprocess_wikipedia.py
 \emph default
@@ -4151,11 +4169,7 @@ status open
 
 \end_inset
 
-Now we'll do some basic manipulations with the airline dataset.
- We'll count the number of lines/observations in our dataset.
- Then we'll do a map-reduce calculation that involves counting the number
- of flights by airline, so airline will serve as the key.
- 
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -4193,7 +4207,7 @@ spark-start
 \emph default
  on Savio, it mentions some log files.
  If you look in the log file for the master, you should see a line like
- this that indicates what the <master_url> is:
+ this that indicates what the <master_url> is (here it is 10.0.5.93):
 \end_layout
 
 \begin_layout Standard

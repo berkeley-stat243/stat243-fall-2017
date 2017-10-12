@@ -522,7 +522,8 @@ if(!require(sparklyr)) {
     spark_install(version = "2.2.0")
 }
 
-# config.yml has driver-memory set -- need some GB for driver or read_csv will be out-of-memory and/or slow down
+## config.yml has driver-memory set -- need some GB for driver
+## or read_csv will be out-of-memory and/or slow down
 readLines('config.yml')
 
 ### connect to Spark ###
@@ -534,7 +535,7 @@ cols <- c(date = 'numeric', hour = 'numeric', lang = 'character',
           page = 'character', hits = 'numeric', size = 'numeric')
           
 
-## takes a while even with only 100 input files, 2.8 GB (190 sec.)
+## takes a while even with only 1.4 GB (zipped) input data (100 sec.)
 ## copy from /scratch/users/paciorek/wikistats/dated" to /tmp/wiki 
 wiki <- spark_read_csv(sc, "wikistats", "/tmp/wiki",
                        header = FALSE, delimiter = ' ',
@@ -546,7 +547,8 @@ library(dplyr)
 
 wiki_en <- wiki %>% filter(lang == "en")
 
-table <- wiki %>% group_by(lang) %>% summarize(count = n()) %>% arrange(desc(count))
+table <- wiki %>% group_by(lang) %>% summarize(count = n()) %>%
+    arrange(desc(count))
 ## note the lazy evaluation: need to look at table to get computation to run
 table
 
@@ -559,7 +561,7 @@ table
 wiki_plus <- spark_apply(wiki, function(data) {
     data$obama = stringr::str_detect(data$page, "Barack_Obama")
     data
-}, columns = c(colnames(wiki), 'obama')))
+}, columns = c(colnames(wiki), 'obama'))
 
 obama <- collect(wiki_plus %>% filter(obama))
 
@@ -567,7 +569,8 @@ obama <- collect(wiki_plus %>% filter(obama))
 
 library(DBI)
 ## reference the Spark table not the R tbl_spark interface object
-wiki_en2 <- dbGetQuery(sc, "SELECT * FROM wikistats WHERE lang = 'en' LIMIT 10")
+wiki_en2 <- dbGetQuery(sc,
+            "SELECT * FROM wikistats WHERE lang = 'en' LIMIT 10")
 
 ## the surprisingly non-PG rated results:
 wiki_en2

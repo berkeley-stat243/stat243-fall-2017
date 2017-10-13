@@ -2493,9 +2493,20 @@ target "http://stat-computing.org/dataexpo/2009/the-data.html"
 \begin_layout Standard
 First we'll use UNIX tools to download the individual yearly CSV files and
  make a single CSV (~12 Gb).
- (See the demo code file for the bash code.) Note that it's much smaller
- when compressed (1.7 Gb) or if stored in a binary format.
- 
+ (See the demo code file, 
+\emph on
+unit8-bigData.R
+\emph default
+, for the bash code.) Note that it's much smaller when compressed (1.7 Gb)
+ or if stored in a binary format.
+ You can download a zipped version of the full CSV from 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.stat.berkeley.edu/share/paciorek/AirlineDataAll.csv.zip"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection

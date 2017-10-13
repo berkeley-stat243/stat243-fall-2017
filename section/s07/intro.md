@@ -15,18 +15,16 @@ This training session will cover the following topics:
      - Savio computing nodes
      - Disk space 
  - Logging in, data transfer, and software
-     - Login nodes, compute nodes, and DTN nodes 
      - Logging in
-     - Data transfer 
-        - SCP/SFTP
+     - Data transfer: SCP/SFTP
      - Software modules
  - Submitting and monitoring jobs
-     - Acounts and partitions
+     - Accounts and partitions
+     - Interactive jobs
      - Basic job submission
      - Parallel jobs
-     - Interactive jobs
      - Monitoring jobs and cluster status
- - Parallel R 
+ - Exercise
 
 
 # System capabilities and hardware
@@ -185,12 +183,20 @@ For this, you may want to have used the -Y flag to ssh if you are running softwa
 
 ```
 # ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu
-srun -A ic_stat243 -p savio2  --nodes=1 -t 10:0 --pty bash
+srun -A ic_stat243 -p savio2  --nodes=1 -t 10:00 --pty bash
 env | grep SLURM  ## see what environment variables are set by SLURM
 # now execute on the compute node:
 module load r/3.2.5
 R
 ```
+
+# Time limits
+
+The -t flag sets an upper limit on how long your job will run. It is of the form:  D-HH:MM:SS, for Days, Hours, Minutes, Seconds. 
+
+For your experimentation here and for any work on PS6, **DO NOT SET A TIME LIMIT MORE THAN 2 HOURS**, without checking with Chris or Andrew.
+
+We have a limited allocation of core-hours on Savio and if one person uses up a lot of that, it will impact the ability of everyone else to get their work done.
 
 # Submitting a batch job
 

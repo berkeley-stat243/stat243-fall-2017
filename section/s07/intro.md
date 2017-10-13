@@ -12,9 +12,8 @@ Much of this material is based on the extensive Savio documention we have prepar
 This training session will cover the following topics:
 
  - System capabilities and hardware
-     - Getting access to the system - FCA, condo, ICA
      - Savio computing nodes
-     - Disk space options (home, scratch, condo storage)
+     - Disk space 
  - Logging in, data transfer, and software
      - Login nodes, compute nodes, and DTN nodes 
      - Logging in
@@ -86,15 +85,13 @@ ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu
 
 To display the graphical windows on your local machine, you'll need X server software on your own machine to manage the graphical windows. For Windows, your options include *eXceed* or *Xming* and for Mac, there is *XQuartz*.
 
-# Data transfer with examples to/from laptop, Box, Google Drive, AWS
-
-Let's see how we would transfer files/data to/from Savio using a few different approaches. 
 
 # Data transfer: SCP/SFTP
 
-We can use the *scp* and *sftp* protocols to transfer files.
+We can use the *scp* and *sftp* protocols to transfer files. 
 
 You need to use the Savio data transfer node, `dtn.brc.berkeley.edu`. The file `bayArea.csv` is too large to store on Github; you can obtain it [here](https://www.stat.berkeley.edu/share/paciorek/bayArea.csv).
+
 
 Linux/Mac:
 
@@ -119,12 +116,6 @@ If you're already connected to a Savio login node, you can use `ssh dtn` to logi
 
 One program you can use with Windows is *WinSCP*, and a multi-platform program for doing transfers via SFTP is *FileZilla*. After logging in, you'll see windows for the Savio filesystem and your local filesystem on your machine. You can drag files back and forth.
 
-You can package multiple files (including directory structure) together using tar:
-```
-tar -cvzf files.tgz dir_to_zip 
-# to untar later:
-tar -xvzf files.tgz
-```
 
 
 # Software modules
@@ -165,7 +156,9 @@ You can see what accounts you have access to and which partitions within those a
 sacctmgr -p show associations user=SAVIO_USERNAME
 ```
 
-Here's an example of the output for a user who has access to an FCA, a condo, and a special partner account:
+Here's an example of the output for a user who has access to various accounts. For your account you'll only see 'ic_stat243' as the accounts (in the second column) you have access to.
+
+
 ```
 Cluster|Account|User|Partition|Share|GrpJobs|GrpTRES|GrpSubmit|GrpWall|GrpTRESMins|MaxJobs|MaxTRES|MaxTRESPerNode|MaxSubmit|MaxWall|MaxTRESMins|QOS|Def QOS|GrpTRESRunMins|
 brc|co_stat|paciorek|savio2_gpu|1||||||||||||savio_lowprio|savio_lowprio||
@@ -184,12 +177,29 @@ brc|ac_scsguest|paciorek|savio|1||||||||||||savio_debug,savio_normal|savio_norma
 ```
 
 
+# Interactive jobs
+
+You can do work interactively.
+
+For this, you may want to have used the -Y flag to ssh if you are running software with a GUI such as MATLAB. 
+
+```
+# ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu
+srun -A ic_stat243 -p savio2  --nodes=1 -t 10:0 --pty bash
+env | grep SLURM  ## see what environment variables are set by SLURM
+# now execute on the compute node:
+module load r/3.2.5
+R
+```
+
 # Submitting a batch job
+
+Or you can submit a job to run in the background.
 
 Let's see how to submit a simple job. If your job will only use the resources on a single node, you can do the following. 
 
 
-Here's an example job script that I'll run. You'll need to modify the --account value and possibly the --partition value.
+Here's an example job script that you can run. 
 
 
         #!/bin/bash
@@ -206,8 +216,8 @@ Here's an example job script that I'll run. You'll need to modify the --account 
         #SBATCH --time=00:00:30
         #
         ## Command(s) to run:
-        module load python/3.2.3 numpy
-        python3 calc.py >& calc.out
+        module load r/3.2.5 ggplot2
+        R CMD BATCH --no-save file.R file.out
 
 
 Now let's submit and monitor the job:
@@ -220,12 +230,24 @@ squeue -j <JOB_ID>
 wwall -j <JOB_ID>
 ```
 
+[[ Andrew, please replace file.R with the looFit.R code from Unit 7 (either the foreach or parSapply version)  and use 
+Sys.getenv("SLURM_CPUS_ON_NODE") to set up the number of workers ]]
+
+
+
+When setting up parallel R code, you can find out how many cores there are on the node assigned to you with:
+
+```
+ncores <- Sys.getenv("SLURM_CPUS_ON_NODE")
+```
 
 Note that except for the *savio2_htc*  and *savio2_gpu* partitions, all jobs are given exclusive access to the entire node or nodes assigned to the job (and your account is charged for all of the cores on the node(s). 
 
 # Parallel job submission
 
-If you are submitting a job that uses multiple nodes, you'll need to carefully specify the resources you need. The key flags for use in your job script are:
+[[ I'd have them look at this and have for reference for PS6, but perhaps not bother running it, in favor of having them work on the exercise ]]
+
+If you are submitting a job that uses multiple nodes, you may need to carefully specify the resources you need. The key flags for use in your job script are:
 
  - `--nodes` (or `-N`): indicates the number of nodes to use
  - `--ntasks-per-node`: indicates the number of tasks (i.e., processes) one wants to run on each node
@@ -233,22 +255,21 @@ If you are submitting a job that uses multiple nodes, you'll need to carefully s
 
 In addition, in some cases it can make sense to use the `--ntasks` (or `-n`) option to indicate the total number of tasks and let the scheduler determine how many nodes and tasks per node are needed. In general `--cpus-per-task` will be 1 except when running threaded code.
 
-For parallel R code, please use `--ntasks=20`.
 
-Here's an example job script for a job that uses MPI for parallelizing over multiple nodes:
+Here's an example job script for a job that uses Spark for parallelizing over multiple nodes:
 
        #!/bin/bash
        # Job name:
        #SBATCH --job-name=test
        #
        # Account:
-       #SBATCH --account=account_name
+       #SBATCH --account=ic_stat243
        #
        # Partition:
-       #SBATCH --partition=partition_name
+       #SBATCH --partition=savio
        #
        # Number of tasks needed for use case (example):
-       #SBATCH --ntasks=20
+       #SBATCH --nodes=2
        #
        # Processors per task:
        #SBATCH --cpus-per-task=1
@@ -257,36 +278,16 @@ Here's an example job script for a job that uses MPI for parallelizing over mult
        #SBATCH --time=00:00:30
        #
        ## Command(s) to run (example):
-       module load r/3.2.5
-       # R submission here
-
+       module load java spark 
+       source /global/home/groups/allhands/bin/spark_helper.sh
+       spark-start
+       spark-submit --master $SPARK_URL $HOME/stat243-fall-2017/units/test_batch.py
+       spark-stop
 
 When you write your code, you may need to specify information about the number of cores to use. SLURM will provide a variety of variables that you can use in your code so that it adapts to the resources you have requested rather than being hard-coded. 
 
-Here are some of the variables that may be useful: SLURM_NTASKS, SLURM_CPUS_PER_TASK, SLURM_NODELIST, SLURM_NNODES.
+In addition to SLURM_CPUS_ON_NODE here are some of the variables that may be useful: SLURM_NTASKS, SLURM_CPUS_PER_TASK, SLURM_NODELIST, SLURM_NNODES.
 
-If you specify --ntasks then in your R code you can use
-```
-ncores = Sys.getenv('SLURM_NTASKS')
-```
-
-or simply hard code in 20.
-
-
-
-# Interactive jobs
-
-You can also do work interactively.
-
-For this, you may want to have used the -Y flag to ssh if you are running software with a GUI such as MATLAB. 
-
-```
-# ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu
-srun -A ic_stat243 -p savio2  --nodes=1 -t 10:0 --pty bash
-# now execute on the compute node:
-module load r/3.2.5
-R
-```
 
 
 # Monitoring jobs and the job queue
@@ -317,48 +318,12 @@ squeue -o "%.7i %.12P %.20j %.8u %.2t %.9M %.5C %.8r %.3D %.20R %.8p %.20q %b"
 We provide some [tips about monitoring your job](http://research-it.berkeley.edu/services/high-performance-computing/tips-using-brc-savio-cluster).
 
 
-# Example parallel R
-
-[[ REPLACE THIS WITH randomForest looFit example from unit 7 ]]
-
-Let's see a basic example of doing an analysis in R across multiple cores on multiple nodes. We'll use the airline departure data in *bayArea.csv*.
-
-We'll do this interactively though often this sort of thing would be done via a batch job.
-
-
-If you just want to parallelize within a node:
-
-```
-srun -A ic_stat243 -p savio2 --nodes=1 -t 30:0 --pty bash
-module load r
-R CMD BATCH --no-save parallel-one.R parallel-one.Rout &
-```
-
-Now here's the R code (see *parallel-one.R*) we're running:
-```
-library(doParallel)
-
-nCores <- Sys.getenv('SLURM_CPUS_ON_NODE')
-registerDoParallel(nCores)
-
-dat <- read.csv('/global/scratch/paciorek/bayArea.csv', header = FALSE,
-                stringsAsFactors = FALSE)
-names(dat)[16:18] <- c('delay', 'origin', 'dest')
-table(dat$dest)
-
-destVals <- unique(dat$dest)
-
-results <- foreach(destVal = destVals) %dopar% {
-    sub <- subset(dat, dest == destVal)
-    summary(sub$delay)
-}
-
-results
-```
 
 # Exercise
 
-set up problem to read from /global/scratch/paciorek/wikistats/dated/
-files for 11052008
+Consider the Wikipedia traffic data in */global/scratch/paciorek/wikistats_small/dated/* on Savio.
 
-with foreach or parSapply read in from the 24 files, pull out the obama ones, and create a dataframe
+Using either foreach or parSapply (or parLapply), write code that, in parallel, reads in the space-delimited file and filters to only the rows that refer to pages where "Barack_Obama" appears. Collect all the results across the 192 files into a single data frame. Run your code using an interactive session on either the Savio2 or Savio partition. 
+
+Note that as we saw in class, the data are the number of hits on different Wikipedia pages for November 4, 2008. The columns are: date, time, language, webpage, number of hits, and page size.
+

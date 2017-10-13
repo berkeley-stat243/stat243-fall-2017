@@ -282,7 +282,7 @@ For this, you may want to have used the -Y flag to ssh if you are running softwa
 
 ```
 # ssh -Y SAVIO_USERNAME@hpc.brc.berkeley.edu
-srun -A co_stat -p savio2  --nodes=1 -t 10:0 --pty bash
+srun -A ic_stat243 -p savio2  --nodes=1 -t 10:0 --pty bash
 # now execute on the compute node:
 module load r/3.2.5
 R
@@ -295,7 +295,7 @@ The basic command for seeing what is running on the system is `squeue`:
 ```
 squeue
 squeue -u SAVIO_USERNAME
-squeue -A co_stat
+squeue -A ic_stat243
 ```
 
 To see what nodes are available in a given partition:
@@ -329,7 +329,7 @@ We'll do this interactively though often this sort of thing would be done via a 
 If you just want to parallelize within a node:
 
 ```
-srun -A co_stat -p savio2 --nodes=1 -t 30:0 --pty bash
+srun -A ic_stat243 -p savio2 --nodes=1 -t 30:0 --pty bash
 module load r
 R CMD BATCH --no-save parallel-one.R parallel-one.Rout &
 ```

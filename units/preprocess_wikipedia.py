@@ -36,8 +36,8 @@ lines = files.flatMap(makeLines)
 
 # repartition so that have data spread across more than two output files
 # for more efficient input in later steps of analysis
-lines.repartition(192).saveAsTextFile(dir + '/' + 'dated')
+lines.repartition(480).saveAsTextFile(dir + '/' + 'dated')
 
 # errors if save out as gzipped:
-# lines.repartition(192).saveAsTextFile(dir + '/' + 'dated', "org.apache.hadoop.io.compress.GzipCodec")
+# lines.repartition(480).saveAsTextFile(dir + '/' + 'dated', "org.apache.hadoop.io.compress.GzipCodec")
 

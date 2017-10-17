@@ -48,7 +48,9 @@ library(parallel)     # one of the core R packages
 library(doParallel)
 library(foreach)
 
-nCores <- Sys.getenv("SLURM_CPUS_ON_NODE")
+# Windows users have to convert to integer or else it thinks this variable
+# is vector of host names
+nCores <- as.integer(Sys.getenv("SLURM_CPUS_ON_NODE"))
 registerDoParallel(nCores)
 
 nSub <- 30 # do only first 30 for this example.  Should actually be n

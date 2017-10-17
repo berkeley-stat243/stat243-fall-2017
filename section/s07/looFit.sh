@@ -3,7 +3,7 @@
 #SBATCH --job-name=looFit
 #
 # Account:
-#SBATCH --account=do
+#SBATCH --account=ic_stat243
 #
 # Partition:
 #SBATCH --partition=savio
@@ -13,4 +13,4 @@
 #
 ## Command(s) to run:
 module load r/3.2.5
-R CMD BATCH --no-save looFit.R looFit.out
+R CMD BATCH --no-save example_loo.R looFit.out

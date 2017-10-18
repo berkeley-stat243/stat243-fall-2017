@@ -17,7 +17,7 @@ dir = '/global/scratch/paciorek/wikistats'
 
 lines = sc.textFile(dir + '/' + 'dated') 
 
-lines.getNumPartitions()  # 16590 (192 input files) for full dataset
+lines.getNumPartitions()  # 16590 (480 input files) for full dataset
 
 # note delayed evaluation
 lines.count()  # 9467817626 for full dataset
@@ -46,7 +46,7 @@ def find(line, regex = "Barack_Obama", language = None):
 lines.filter(find).take(100) # pretty quick
     
 # not clear if should repartition; will likely have small partitions if not
-obama = lines.filter(find).repartition(192) # ~ 18 minutes for full dataset (but remember lazy evaluation) 
+obama = lines.filter(find).repartition(480) # ~ 18 minutes for full dataset (but remember lazy evaluation) 
 obama.count()  # 433k observations for full dataset
 
 ## @knitr map-reduce

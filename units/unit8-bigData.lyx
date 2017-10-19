@@ -4362,21 +4362,40 @@ status open
 
 \begin_layout Standard
 Note that because we need to aggregate all the data by key before doing
- the reduction on the full data in each key, this is much slower than a
- reduce operation like max or mean.
+ the reduction on the full data in each key (which is actually just a 'map'
+ operation in this case once the data are already grouped by key), this
+ is much slower than a reduce operation like max or mean.
 \end_layout
 
 \begin_layout Standard
-Note that I haven't run this because Python 2.6.6 on Savio doesn't have 
+Note that I didn't run this in the class demo in part because Python 2.6.6
+ on Savio doesn't have 
 \emph on
 numpy
 \emph default
- installed and the Python 
-\emph on
-pip
-\emph default
- installer is also not available, so getting the software set up would be
- somewhat involved.
+ installed.
+ Instead, you would need to start PySpark as follows, either using Python
+ 2.7.8 or Python 3.5.1.
+ If start PySpark in this way, the code above should run.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<savio-spark-setup-updated-python, engine='bash', eval=FALSE>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection

@@ -83,10 +83,23 @@ counts.map(transform).repartition(1).saveAsTextFile(outputDir) # 5 sec.
 
 ## @knitr median
 
+## to use numpy, see syntax in unit8-bigData.sh for how to
+## use Python 2.7.8 or Python 3.5.1 with PySpark
+
+import numpy as np
+
+def findShortLines(line):
+    vals = line.split(' ')
+    if len(vals) < 6:
+        return(False)
+    else:
+        return(True)
+
+
 def computeKeyValue(line):
     vals = line.split(' ')
     # key is language, val is page size
-    return(vals[2], vals[5])
+    return(vals[2], int(vals[5]))
 
 
 def medianFun(input):
@@ -98,7 +111,7 @@ def medianFun(input):
     return((input[0], med))
 
 
-output = lines.map(computeKeyValue).groupByKey()
+output = lines.filter(findShortLines).map(computeKeyValue).groupByKey()
 medianResults = output.map(medianFun).collect()
 
 ## @knitr null

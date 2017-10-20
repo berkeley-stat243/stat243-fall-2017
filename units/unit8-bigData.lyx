@@ -4376,7 +4376,7 @@ numpy
  installed.
  Instead, you would need to start PySpark as follows, either using Python
  2.7.8 or Python 3.5.1.
- If start PySpark in this way, the code above should run.
+ If you start PySpark in this way, the code above should run.
 \end_layout
 
 \begin_layout Standard

@@ -36,7 +36,9 @@ lines = files.flatMap(makeLines)
 
 # repartition so that have data spread across more than two output files
 # for more efficient input in later steps of analysis
-lines.repartition(480).saveAsTextFile(dir + '/' + 'dated')
+# use a large number of partitions so that can read files into R
+# in parallel without going over 64 GB RAM limit of Savio node
+lines.repartition(960).saveAsTextFile(dir + '/' + 'dated')
 
 # errors if save out as gzipped:
 # lines.repartition(480).saveAsTextFile(dir + '/' + 'dated', "org.apache.hadoop.io.compress.GzipCodec")

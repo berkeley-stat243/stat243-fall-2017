@@ -111,6 +111,8 @@ e3$values
 
 ### 3.1 Triangular systems
 
+## @knitr triangular-solve
+
 n <- 20
 X <- crossprod(matrix(rnorm(n^2), n))
 b <- rnorm(n)
@@ -120,6 +122,21 @@ out1 <- backsolve(U, b)
 out2 <- forwardsolve(L, b) 
 all.equal(out1, c(solve(U) %*% b)) 
 all.equal(out2, c(solve(L) %*% b)) 
+
+## @knitr triangular-solve
+
+n <- 2000
+X <- crossprod(matrix(rnorm(n^2), n))
+b <- rnorm(n)
+U <- chol(crossprod(X)) # U is upper-triangular
+
+system.time(
+    out1 <- backsolve(U, b) 
+)
+
+system.time(
+    out2 <- solve(U) %*% b
+)
 
 # 3.2 LU
 

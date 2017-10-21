@@ -3009,61 +3009,17 @@ forwardsolve()
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex Chunk
+\begin_inset ERT
 status open
 
 \begin_layout Plain Layout
 
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-chunk3
-\end_layout
-
-\end_inset
-
-n <- 20
+<<triangular-solve>>=
 \end_layout
 
 \begin_layout Plain Layout
 
-X <- crossprod(matrix(rnorm(n^2), n))
-\end_layout
-
-\begin_layout Plain Layout
-
-b <- rnorm(n)
-\end_layout
-
-\begin_layout Plain Layout
-
-U <- chol(crossprod(X)) # U is upper-triangular
-\end_layout
-
-\begin_layout Plain Layout
-
-L <- t(U) # L is lower-triangular
-\end_layout
-
-\begin_layout Plain Layout
-
-out1 <- backsolve(U, b) 
-\end_layout
-
-\begin_layout Plain Layout
-
-out2 <- forwardsolve(L, b) 
-\end_layout
-
-\begin_layout Plain Layout
-
-all.equal(out1, c(solve(U) %*% b)) 
-\end_layout
-
-\begin_layout Plain Layout
-
-all.equal(out2, c(solve(L) %*% b)) 
+@
 \end_layout
 
 \end_inset
@@ -3121,6 +3077,43 @@ To reiterate the distinction between matrix inversion and solving a system
 
 , what we mean on a computer is to carry out the above algorithm, not to
  find the inverse and then multiply.
+\end_layout
+
+\begin_layout Standard
+Here's a good reason why.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<triangular-solve-speed>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+That assumes you have 
+\begin_inset Formula $U$
+\end_inset
+
+, but we'll see in a bit that even when one accounts for the creation of
+ 
+\begin_inset Formula $U$
+\end_inset
+
+, you don't want to invert matrices in order to solve systems of equations.
 \end_layout
 
 \begin_layout Subsection

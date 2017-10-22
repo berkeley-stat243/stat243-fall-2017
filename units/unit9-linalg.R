@@ -123,9 +123,9 @@ out2 <- forwardsolve(L, b)
 all.equal(out1, c(solve(U) %*% b)) 
 all.equal(out2, c(solve(L) %*% b)) 
 
-## @knitr triangular-solve
+## @knitr triangular-solve-speed
 
-n <- 2000
+n <- 5000
 X <- crossprod(matrix(rnorm(n^2), n))
 b <- rnorm(n)
 U <- chol(crossprod(X)) # U is upper-triangular
@@ -137,6 +137,8 @@ system.time(
 system.time(
     out2 <- solve(U) %*% b
 )
+
+## @knitr
 
 # 3.2 LU
 

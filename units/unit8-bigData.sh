@@ -47,6 +47,26 @@ env | grep SPARK
 
 ## @knitr pyspark-start
 
+# PySpark using Python 2.6.6 (default Python on Savio)
 module unload python
-pyspark --master $SPARK_URL --executor-memory 50G
+pyspark --master $SPARK_URL --executor-memory 60G 
+
+## @knitr savio-spark-setup-updated-python
+
+# PySpark using Python 2.7.8 (more packages available)
+# packages available (using module load) include: numpy, scipy, pandas, scikit-learn, cython
+module load python/2.7.8 numpy
+pyspark --master $SPARK_URL --executor-memory 60G \
+        --conf "spark.executorEnv.PATH=${PATH}" \
+        --conf "spark.executorEnv.LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" \
+        --conf "spark.executorEnv.PYTHONPATH=${PYTHONPATH}"
+
+# PySpark using Python 3.5.1 (fewer packages, but more recent Python version)
+# packages available (without using module load) include: numpy, scipy, pandas
+module load python/3.5.1
+export PYSPARK_PYTHON=python3
+pyspark --master $SPARK_URL --executor-memory 60G \
+        --conf "spark.executorEnv.PATH=${PATH}" \
+        --conf "spark.executorEnv.LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" \
+        --conf "spark.executorEnv.PYTHONHASHSEED=0"
 

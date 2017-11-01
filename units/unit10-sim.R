@@ -29,7 +29,7 @@ hist(uFromR, nclass = 25)
 ## @knitr Wichmann
 
 RNGkind("Wichmann-Hill")
-set.seed(0)
+set.seed(1)
 saveSeed <- .Random.seed
 uFromR <- runif(10)
 a <- c(171, 172, 170)
@@ -50,14 +50,14 @@ xyz[10, ]
 
 ## @knitr seed
 
-set.seed(0)
+set.seed(1)
 rnorm(10)
-set.seed(0)
+set.seed(1)
 rnorm(10)
 
 ## @knitr seed-save
 
-set.seed(0)
+set.seed(1)
 rnorm(5)
 savedSeed <- .Random.seed
 tmp <- sample(1:50, 2000, replace = TRUE)
@@ -137,10 +137,10 @@ lines(yvals, dnorm(yvals)/(1-pnorm(tauStd)), col = 'red')
 
 m <- 1000 # number of samples for each estimator
 ## standard MC estimator
-set.seed(0)
+set.seed(1)
 y <- rt(m, df = 1)
 ## samples for importance sampler
-set.seed(0)
+set.seed(1)
 x <- rt(m, df = 1) - 5  # i.e sample from g(x) being a Cauchy centered at -5
 f <- dt(x, df = 1)  # density of x under f
 g <- dt(x + 5, df = 1)  # density of x under g (density of x under a Cauchy centered at -5 is the same as density of x+5 under Cauchy centered at 0)
@@ -156,7 +156,7 @@ nSims <- 100
 m <- 1000 # number of samples for each estimator
 
 isEst <- stdEst <- varIS <- varStd <- rep(NA, nSims)
-set.seed(0)
+set.seed(1)
 for(i in 1:nSims){  # a small simulation study of the approach with m = 1000
   ## note this could be done w/out looping if I were trying to be efficient
 
@@ -165,7 +165,7 @@ for(i in 1:nSims){  # a small simulation study of the approach with m = 1000
   y <- rt(m, df = 1)
 
   ## samples for importance sampler
-  set.seed(0)
+  set.seed(1)
   x <- rt(m, df = 1) - 5  # i.e sample from g(x) being a Cauchy centered at -5
   f <- dt(x, df = 1)  # density of x under f
   g <- dt(x + 5, df = 1)  # density of x under g (density of x under a Cauchy centered at -5 is the same as density of x+5 under Cauchy centered at 0)
@@ -208,7 +208,7 @@ n <- c(10, 100, 1000)
 tVsNorm <- c("t", "norm")
 levels <- expand.grid(thetaLevels, tVsNorm, n)
 ## example of replicate() -- generate m sets correlated normals
-set.seed(0)
+set.seed(1)
 genFun <- function(n, theta = 1){
 	u <- rnorm(n)
 	x <- runif(n)

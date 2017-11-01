@@ -1337,15 +1337,20 @@ mc.preschedule
 \emph on
 mclapply()
 \emph default
- and the 
-\emph on
-.scheduling
-\emph default
- argument in 
+.
+ For 
 \emph on
 parLapply()
 \emph default
-.
+ the documentation would suggest 
+\emph on
+parLapplyLB()
+\emph default
+ is the way to do this but there appears to be a bug in 
+\emph on
+parLapplyLB()
+\emph default
+ such that no load-balancing is done.
 \end_layout
 
 \end_deeper

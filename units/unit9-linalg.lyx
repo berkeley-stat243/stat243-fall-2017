@@ -1165,7 +1165,7 @@ Consider a regression context.
 \end_inset
 
 ), of which 
-\begin_inset Formula $q$
+\begin_inset Formula $q\leq p$
 \end_inset
 
  are linearly independent covariates.
@@ -1213,8 +1213,12 @@ Consider a regression context.
 
  numbers telling us where on each of the axes we are - this is the same
  as a linear combination of axis-oriented vectors.
- When we have 
-\begin_inset Formula $n\leq q$
+ 
+\end_layout
+
+\begin_layout Standard
+When fitting a regression, if 
+\begin_inset Formula $n=p=q$
 \end_inset
 
 , a vector of 
@@ -1223,22 +1227,45 @@ Consider a regression context.
 
  observations can be represented exactly as a linear combination of the
  
-\begin_inset Formula $q$
+\begin_inset Formula $p$
 \end_inset
 
- basis vectors, so there is no residual.
+ basis vectors, so there is no residual and we have a single unique (and
+ exact) solution (e.g., with 
+\begin_inset Formula $n=p=2$
+\end_inset
+
+, the observations fall exactly on the simple linear regression line).
  If 
-\begin_inset Formula $n=q$
+\begin_inset Formula $n<p$
 \end_inset
 
-, then we have a single unique solution, while if 
-\begin_inset Formula $n<q$
+, then we have at most 
+\begin_inset Formula $n$
 \end_inset
 
- we have multiple possible solutions and the system is ill-determined (under-det
-ermined).
+ linearly independent covariates (the rank is at most 
+\begin_inset Formula $n$
+\end_inset
+
+).
+ In this case we have multiple possible solutions and the system is ill-determin
+ed (under-determined).
+ Similarly, if 
+\begin_inset Formula $q<p$
+\end_inset
+
+ and 
+\begin_inset Formula $n\geq p$
+\end_inset
+
+, the rank is again less than 
+\begin_inset Formula $p$
+\end_inset
+
+ and we have multiple possible solutions.
  Of course we usually have 
-\begin_inset Formula $n>q$
+\begin_inset Formula $n>p$
 \end_inset
 
 , so the system is overdetermined - there is no exact solution, but regression

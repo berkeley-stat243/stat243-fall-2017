@@ -72,6 +72,7 @@ f <- function(args) {
   .Random.seed <<- oldseed # note global assignment!
 }
 
+## @knitr blank
 
 ###################################
 # 5: Generating random variables

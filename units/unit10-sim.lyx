@@ -2277,13 +2277,13 @@ Importance sampling (IS) allows us to estimate expected values, with some
 \begin_layout Standard
 \begin_inset Formula 
 \[
-E_{f}(h(X))=\int h(x)\frac{f(x)}{g(x)}g(x)dx
+\phi=E_{f}(h(X))=\int h(x)\frac{f(x)}{g(x)}g(x)dx
 \]
 
 \end_inset
 
 so 
-\begin_inset Formula $\hat{\mu}=\frac{1}{m}\sum_{i}h(x_{i})\frac{f(x_{i})}{g(x_{i})}$
+\begin_inset Formula $\hat{\phi}=\frac{1}{m}\sum_{i}h(x_{i})\frac{f(x_{i})}{g(x_{i})}$
 \end_inset
 
  for 
@@ -2322,7 +2322,7 @@ Here we don't require the majorizing property, just that the densities have
 
  to have heavier tails.
  More specifically for a low variance estimator of 
-\begin_inset Formula $\mu$
+\begin_inset Formula $\phi$
 \end_inset
 
 , we would want that 
@@ -2347,7 +2347,7 @@ This suggests we can reduce variance in an IS context by oversampling
 \end_inset
 
  is large and undersampling when it is small, since 
-\begin_inset Formula $\mbox{Var}(\hat{\mu})=\frac{1}{m}\mbox{Var}(h(X)\frac{f(X)}{g(X)})$
+\begin_inset Formula $\mbox{Var}(\hat{\phi})=\frac{1}{m}\mbox{Var}(h(X)\frac{f(X)}{g(X)})$
 \end_inset
 
 .

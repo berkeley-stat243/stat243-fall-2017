@@ -512,7 +512,7 @@ f <- function(x, plot = TRUE){
 library(fields)
 par(mfrow = c(1,2))
 
-x1s <- seq(-5, 8, len = 100); x2s = seq(-5, 2, len = 100)
+x1s <- seq(-5, 10, len = 100); x2s = seq(-5, 2, len = 100)
 fx <- apply(expand.grid(x1s, x2s), 1, f, FALSE)
 cnt <- 1
 image.plot(x1s, x2s, matrix(log(fx), 100, 100))

@@ -2756,8 +2756,12 @@ for large
  How could we implement SGD in such a case? At each iteration we could randomly
  choose an observation and compute the contribution to the gradient from
  that data point, or we could choose a random subset of the data (this is
- mini-batch SGD), or there are variations where we systematically cycle
- through the observations or cycle through subsets.
+ 
+\emph on
+mini-batch SGD
+\emph default
+), or there are variations where we systematically cycle through the observation
+s or cycle through subsets.
  However, in some situations, convergence is actually much faster when using
  randomness.
  And if the data are ordered in some meaningful way we definitely do not
@@ -3018,7 +3022,7 @@ to find
  is
 \begin_inset Formula 
 \[
--2x_{j}\sum_{i}(Y_{i}-X\beta)\pm\lambda
+-2x_{j}\sum_{i}(Y_{i}-X_{i}^{\top}\beta)\pm\lambda
 \]
 
 \end_inset

@@ -2679,6 +2679,185 @@ A basic approach is to do the full step and then step back by halves.
 
 \end_layout
 
+\begin_layout Subsubsection
+Stochastic gradient descent
+\end_layout
+
+\begin_layout Standard
+Stochastic gradient descent (SGD) is the hot method in machine learning,
+ commonly used for fitting deep neural networks.
+ It allows you to optimize an objective function with respect to what is
+ often a very large number of parameters even when the data size is huge.
+\end_layout
+
+\begin_layout Standard
+Gradient descent is a simplification of Newton's method that does not rely
+ on the second derivative, but rather chooses the direction using the gradient
+ and then a step size, 
+\begin_inset Formula $\alpha_{t}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+x_{t+1}=x_{t}-\alpha_{t}f\p(x_{t})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The basic idea of stochastic gradient descent is to replace the gradient
+ with a function whose expected value is the gradient, 
+\begin_inset Formula $E(g(x_{t})=f\p(x_{t})$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+x_{t+1}=x_{t}-\alpha_{t}g(x_{t})
+\]
+
+\end_inset
+
+Thus on average we should go in a good (downhill) direction.
+ Given that we know that strictly following the gradient can lead to slow
+ convergence, it makes some intuitive sense that we could still do ok without
+ using the exact gradient.
+ One can show formally that SGD will converge for convex functions.
+
+\series bold
+ 
+\end_layout
+
+\begin_layout Standard
+SGD can be used in various contexts, but the common one we will focus on
+ is when
+\begin_inset Formula 
+\begin{eqnarray*}
+f(x) & = & \sum_{i=1}^{n}f_{i}(x)\\
+f\p(x) & = & \sum_{i=1}^{n}f\p_{i}(x)
+\end{eqnarray*}
+
+\end_inset
+
+for large 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ Thus calculation of the gradient is 
+\begin_inset Formula $O(n)$
+\end_inset
+
+, and we may not want to incur that computational cost.
+ How could we implement SGD in such a case? At each iteration we could randomly
+ choose an observation and compute the contribution to the gradient from
+ that data point, or we could choose a random subset of the data (this is
+ mini-batch SGD), or there are variations where we systematically cycle
+ through the observations or cycle through subsets.
+ However, in some situations, convergence is actually much faster when using
+ randomness.
+ And if the data are ordered in some meaningful way we definitely do not
+ want to cycle through the observations in that order, as this can result
+ in a biased estimate of the gradient and slow convergence.
+ So one generally randomly shuffles the data before starting SGD.
+ Note that using subsets rather than individual observations is likely to
+ be more effective as it can allow us to use optimized matrix/vector computation
+s.
+\end_layout
+
+\begin_layout Standard
+How should one choose the step size, 
+\begin_inset Formula $\alpha_{t}$
+\end_inset
+
+ (also called the learning rate)? One might think that as one gets close
+ to the optimum, if one isn't careful, one might simply bounce around near
+ the optimum in a random way, without actually converging to the optimum.
+ So intuition suggests that 
+\begin_inset Formula $\alpha_{t}$
+\end_inset
+
+ should decrease with 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Some choices of step size have included:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\alpha_{t}=1/t$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+set a schedule, such that for 
+\begin_inset Formula $T$
+\end_inset
+
+ iterations, 
+\begin_inset Formula $\alpha_{t}=\alpha$
+\end_inset
+
+, then for the next 
+\begin_inset Formula $T$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha_{t}=\alpha\gamma$
+\end_inset
+
+, then for the next 
+\begin_inset Formula $T$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha_{t}=\alpha\gamma^{2}$
+\end_inset
+
+.
+ A heuristic is for 
+\begin_inset Formula $\gamma\in(0.8,0.9)$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+run with 
+\begin_inset Formula $\alpha_{t}=\alpha$
+\end_inset
+
+ for 
+\begin_inset Formula $T$
+\end_inset
+
+ iterations, then with 
+\begin_inset Formula $\alpha_{t}=\alpha/2$
+\end_inset
+
+ for 
+\begin_inset Formula $2T$
+\end_inset
+
+, then with 
+\begin_inset Formula $\alpha_{t}=\alpha/4$
+\end_inset
+
+ for 
+\begin_inset Formula $4T$
+\end_inset
+
+ and so forth.
+\end_layout
+
 \begin_layout Subsection
 Coordinate descent (Gauss-Seidel)
 \end_layout
@@ -3640,18 +3819,6 @@ G-CS is unreadable
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsection
-Stochastic gradient descent
-\end_layout
-
-\begin_layout Standard
-[fill this out]
-\end_layout
-
-\begin_layout Standard
-[discuss rate/schedule]
 \end_layout
 
 \begin_layout Section

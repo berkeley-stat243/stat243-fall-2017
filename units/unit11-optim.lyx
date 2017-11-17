@@ -286,7 +286,7 @@ shing between them) as
  and the matrix of second partial derivatives (the Hessian) is 
 \begin_inset Formula 
 \[
-f\pp(x)=\nabla_{f}^{2}(x)=H_{f}(x)=\left(\begin{array}{cccc}
+f\pp(x)=\nabla^{2}f(x)=H_{f}(x)=\left(\begin{array}{cccc}
 \frac{\partial^{2}f}{\partial x_{1}^{2}} & \frac{\partial^{2}f}{\partial x_{1}\partial x_{2}} & \cdots & \frac{\partial^{2}f}{\partial x_{1}\partial x_{p}}\\
 \frac{\partial^{2}f}{\partial x_{1}\partial x_{2}} & \frac{\partial^{2}f}{\partial x_{2}^{2}} & \cdots & \frac{\partial^{2}f}{\partial x_{2}\partial x_{p}}\\
 \vdots & \vdots & \ddots\\
@@ -3022,7 +3022,7 @@ to find
  is
 \begin_inset Formula 
 \[
--2x_{j}\sum_{i}(Y_{i}-X_{i}^{\top}\beta)\pm\lambda
+-2\sum_{i}x_{ij}(Y_{i}-X_{i}^{\top}\beta)\pm\lambda
 \]
 
 \end_inset

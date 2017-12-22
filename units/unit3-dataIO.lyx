@@ -2764,6 +2764,33 @@ target "http://en.wikipedia.org/wiki/ASCII"
  Latin-1 encodes a small subset of Unicode and contains the characters used
  in many European languages (e.g., letters with accents).
  
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+further details - https://docs.python.org/2/howto/unicode.html - Unicode is
+ a set of numeric codes for the characters - the encoding is how those codes
+ are stored as a sequence of bytes; in UTF-8 most codes are stored in 2
+ bytes, and ASCII ones in one byte (so ASCII text is valid UTF-8); dealing
+ with encoding needs to deal with fact that different characters stored
+ in different numbers of bytes
+\begin_inset Newline newline
+\end_inset
+
+multi-byte string error is presumably the >1 bytes characters in an encoding
+ like UTF-8
+\end_layout
+
+\begin_layout Plain Layout
+programs that can only read ASCII will read the ASCI charactes and get garbage
+ for the multi-byte strings that are not ascii but won't find any ascii
+ characters within those multibyte strings because of how the encoding is
+ designed - see Wikipedia page on UTF-8
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

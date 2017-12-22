@@ -19,6 +19,16 @@ readLines('tmp.txt')
 system('ls -l tmp.txt', intern = TRUE)
 system('cat tmp.txt', intern = TRUE)
 
+## @knitr unicode-example
+
+euro <- '\u20AC' # Euro currency symbol as Unicode 'code point'
+Encoding(euro) <- 'UTF-8'
+euro
+writeBin(euro, 'tmp.txt')
+system('ls -l tmp.txt', intern = TRUE) ## in UTF-8 ASCII characters take up one byte but other characters take up more than one byte - here the euro takes up four bytes
+system('cat tmp.txt')  ## so system knows how to interpret the UTF-8 encoded file and represent the Unicode character on the screen
+
+
 ## @knitr
 
 #####################################################
